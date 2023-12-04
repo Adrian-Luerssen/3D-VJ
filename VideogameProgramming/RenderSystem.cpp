@@ -49,20 +49,22 @@ void RenderSystem::tick(World* world, float deltaTime)
 
     world->each<MeshComponent>([&](Entity* ent, ComponentHandle<MeshComponent> meshComp) {
 
-        
-
         ComponentHandle<Transform3D> transform = ent->get<Transform3D>();
 
         Texture texture = textureManager.GetTexture(meshComp->textureFilepath);
+        Texture normalsTexture = textureManager.GetTexture(meshComp->normalsFilepath);
 
         Mesh mesh = meshManager.GetMesh(meshComp->meshFilepath);
-
-        glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)(width / height), 0.1f, 100.0f);
+        float far = camera->get<UserComponent>()->renderDistance;
+        glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)(width / height), 0.1f, far);
 
         ComponentHandle<Camera> cam = camera->get<Camera>();
 
-        rend.DrawMesh(mesh, texture, proj, transform->position, transform->scale, cam.get(), meshComp->shaderName);
+     
+        rend.DrawMesh(mesh, texture, proj, transform->position, transform->scale, transform->rotation, cam.get(), normalsTexture, far, meshComp->shaderName);
+        
 
+        
     });
 
     

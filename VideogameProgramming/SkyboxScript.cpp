@@ -16,9 +16,9 @@ void SkyboxScript::startScript() {
 
 void SkyboxScript::tickScript(float deltaTime) {
 
-	ComponentHandle<Transform3D> myTransform = entity->get<Transform3D>();
-	ComponentHandle<Camera> cameraComp = camera->get<Camera>();
+	//ComponentHandle<Transform3D> myTransform = entity->get<Transform3D>();
+	//ComponentHandle<Camera> cameraComp = camera->get<Camera>();
 
-	myTransform->position = cameraComp->position;
+	//myTransform->position = cameraComp->position;
 
 }

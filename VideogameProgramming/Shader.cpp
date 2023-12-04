@@ -79,3 +79,15 @@ void Shader::SetVector3f(const char* name, glm::vec3 data) {
 	int loc = glGetUniformLocation(ID, name);
 	glUniform3fv(loc, 1, glm::value_ptr(data));
 }
+
+void Shader::SetFloat(const char* name, float data) {
+
+	int loc = glGetUniformLocation(ID, name);
+	glUniform1f(loc, data);
+}
+
+void Shader::SetTextureSampler(const char* name, GLint textureUnit) {
+
+	int loc = glGetUniformLocation(ID, name);
+	glUniform1i(loc, textureUnit);
+}

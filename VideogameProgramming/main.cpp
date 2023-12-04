@@ -25,6 +25,8 @@
 #include "SpawnerScript.h"
 #include "SkyboxScript.h"
 
+#include "AsteroidScript.h"
+#include "BulletScript.h"
 using std::cout; 
 using std::endl;
 using std::chrono::duration_cast;
@@ -42,6 +44,7 @@ time_t current_time;
 
 World* world;
 
+
 void SetupGLFW() {
 
 	glfwInit();
@@ -55,7 +58,7 @@ void SetupGLFW() {
 
 bool SetupWindow() {
 	//Create a GLFWwindow with size 800x800
-	window = glfwCreateWindow(800, 800, "ProgramacioVideojocs", NULL, NULL);
+	window = glfwCreateWindow(width, height, "ProgramacioVideojocs", NULL, NULL);
 	if (window == NULL) {
 
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -71,13 +74,14 @@ bool SetupWindow() {
 	glViewport(0, 0, width, height);
 
 	glEnable(GL_BLEND);
+	glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	return true;
 }
 
 Entity* CreateEntity2D(glm::vec2 position, float rotation, float scale, const char* filepath, glm::vec3 color, 
-	bool autoSize = true, glm::vec2 size = glm::vec2(1.0, 1.0), const char* shaderName = "default") {
+	bool autoSize = true, glm::vec2 size = glm::vec2(1.0, 1.0), const char* shaderName = "inverted") {
 	Entity* ent = world->create();
 	ent->assign<Transform2D>(position, rotation, scale);
 	ent->assign<Sprite>(filepath, color, autoSize, size, shaderName);
@@ -85,10 +89,11 @@ Entity* CreateEntity2D(glm::vec2 position, float rotation, float scale, const ch
 	return ent;
 }
 
-Entity* CreateEntity3DWithMesh(glm::vec3 position, float scale, const char* meshFilepath, const char* texFilepath) {
+
+Entity* CreateEntity3DWithMesh(glm::vec3 position, float scale, const char* meshFilepath, const char* texFilepath, const char* normalsFilepath = "Textures/flat_normals.png") {
 	Entity* ent = world->create();
 	ent->assign<Transform3D>(position, scale);
-	ent->assign<MeshComponent>(texFilepath, meshFilepath);
+	ent->assign<MeshComponent>(texFilepath, meshFilepath, "default", normalsFilepath);
 
 	return ent;
 }
@@ -125,45 +130,66 @@ void SetupWorld() {
 	ScriptManager* scriptManager = scriptSystem->getScriptManager();
 
 	Entity* ent = CreateCamera(glm::vec3(30.0f, 2.f, 30.0f));
+	ent->assign<UserComponent>();
 	FirstPersonCameraScript* fps = new FirstPersonCameraScript(window, world, ent);
 	
 	ent->assign<ScriptComponent>(scriptManager->AddScript(fps));
 
 	rs->setCamera(ent);
 
-	//Entity* sprite = CreateEntity2D(glm::vec2(100., 100.), 0.f, 1.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
-
-	/*Entity* spawner = CreateEntity3DEmpty();
+	/**/Entity* spawner = CreateEntity3DEmpty();
 	SpawnerScript* spawner_script = new SpawnerScript(window, world, spawner);
-	spawner->assign<ScriptComponent>(scriptManager->AddScript(spawner_script));*/
+	spawner->assign<ScriptComponent>(scriptManager->AddScript(spawner_script));
 
-	Entity* skybox = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/skybox2.png");
+	Entity* bulletManager = CreateEntity3DEmpty();
+	BulletScript* bulletScript = new BulletScript(window, world, bulletManager);
+	bulletManager->assign<ScriptComponent>(scriptManager->AddScript(bulletScript));
+	Entity* skybox = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/background.png");
+	//Entity* skybox2 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/nebula_1.png");
+	//Entity* skybox3 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/nebula_2.png");
+	Entity* skybox4 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/space.png");
 
-	Entity* floor = CreateEntity3DWithMesh(glm::vec3(18, 0, 18), 20, "Meshes/plane.obj", "Textures/wall.png");
+	//Entity* floor = CreateEntity3DWithMesh(glm::vec3(32, 0, 18), 30, "Meshes/plane.obj", "Textures/background_brown.png", "Textures/sand/Sand_norm.png");
 
-	string map[] = { 
-		"########-#", 
-		"#--#---#-#", 
-		"#-##-#-#-#",
-		"#-#--#---#",
-		"#-##-#####",
-		"#--#-----#",
-		"##-#####-#",
-		"##----#--#", 
-		"#--#-----#", 
-		"##########" 
-	};
 
-	for (int i = 0; i < 10; i++) {
-		for (int j = 0; j < 10; j++) {
-			if (map[i][j] == '#') {
-				Entity* wall = CreateEntity3DWithMesh(glm::vec3(i*4, 2, j*4), 2, "Meshes/cube.obj", "Textures/wall.png");
-				wall->assign<CubeCollider>(2.5, 2.5, 2.5);
-			}
-		}
+	//Entity* wall = CreateEntity3DWithMesh(glm::vec3(4, 2, 4), 2, "Meshes/asteroide1.obj", "Textures/sand/Sand_norm.png", "Textures/asteroide1/Mat1_Normal_DirectX.png");
+	//wall->assign<CubeCollider>(2.1, 2.1, 2.1);
+	//wall->assign<UserComponent>();
+
+	// 2D sprites not drawn anymore?
+
+	Entity* sprite = CreateEntity2D(glm::vec2(100., 100.), 0.f, 1.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
+
+	Entity* sprite2 = CreateEntity2D(glm::vec2(250., 100.), 0.f, 1.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
+
+	// MY OWN TEXTURES WONT LOAD
+	//Entity* sprite3 = CreateEntity2D(glm::vec2(100., 250.), 0.f, 1.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
+
+	//Entity* obj1 = CreateEntity3DWithMesh(glm::vec3(0., 1.5, 0.),1, "Meshes/wizard.obj", "Textures/wizard_texture.png", "Textures/sand/Sand_norm.png");
+
+	//Entity* obj2 = CreateEntity3DWithMesh(glm::vec3(-5., 1, 0.), 1, "Meshes/teapot.obj", "Textures/science_dog.png", "Textures/sand/Sand_norm.png");
+
+	//Entity* obj3 = CreateEntity3DWithMesh(glm::vec3(5., 1, 0.), 1, "Meshes/pipe.obj", "Textures/science_dog.png", "Textures/sand/Sand_norm.png");
+	for (int i = 0; i < 20; i++) {
+		Entity* asteroid1 = CreateEntity3DWithMesh(glm::vec3(1000000, 1, 0.), 5, "Meshes/asteroids/asteroide1.obj", "Textures/asteroids/color.png", "Textures/asteroids/normal.png");
+		asteroid1->assign<EnemyComponent>(1, 1, i);
+		asteroid1->assign<CubeCollider>(25, 25, 25);
+		AsteroidScript* asteroid_script = new AsteroidScript(window, world, asteroid1);
+		asteroid1->assign<ScriptComponent>(scriptManager->AddScript(asteroid_script));
 	}
-
 	
+	
+	/*Entity* asteroid2 = CreateEntity3DWithMesh(glm::vec3(10., 1, 0.), 0.5, "Meshes/asteroids/asteroide2.obj", "Textures/asteroids/color.png", "Textures/asteroids/normal.png");
+	Entity* asteroid3 = CreateEntity3DWithMesh(glm::vec3(10., 1, 0.), 0.5, "Meshes/asteroids/asteroide3.obj", "Textures/asteroids/color.png", "Textures/asteroids/normal.png");
+	Entity* asteroid4 = CreateEntity3DWithMesh(glm::vec3(10., 1, 0.), 0.5, "Meshes/asteroids/asteroide4.obj", "Textures/asteroids/color.png", "Textures/asteroids/normal.png");
+	Entity* asteroid5 = CreateEntity3DWithMesh(glm::vec3(10., 1, 0.), 0.5, "Meshes/asteroids/asteroide5.obj", "Textures/asteroids/color.png", "Textures/asteroids/normal.png");
+	Entity* asteroid6 = CreateEntity3DWithMesh(glm::vec3(10., 1, 0.), 0.5, "Meshes/asteroids/asteroide6.obj", "Textures/asteroids/color.png", "Textures/asteroids/normal.png");
+	Entity* asteroid7 = CreateEntity3DWithMesh(glm::vec3(10., 1, 0.), 0.5, "Meshes/asteroids/asteroide7.obj", "Textures/asteroids/color.png", "Textures/asteroids/normal.png");
+	Entity* asteroid8 = CreateEntity3DWithMesh(glm::vec3(10., 1, 0.), 0.5, "Meshes/asteroids/asteroide8.obj", "Textures/asteroids/color.png", "Textures/asteroids/normal.png");
+	Entity* asteroid9 = CreateEntity3DWithMesh(glm::vec3(10., 1, 0.), 0.5, "Meshes/asteroids/asteroide9.obj", "Textures/asteroids/color.png", "Textures/asteroids/normal.png");
+	Entity* asteroid10 = CreateEntity3DWithMesh(glm::vec3(10., 1, 0.), 0.5, "Meshes/asteroids/asteroide10.obj", "Textures/asteroids/color.png", "Textures/asteroids/normal.png");*/
+
+	//Entity* obj5 = CreateEntity3DWithMesh(glm::vec3(-10., 2., 0.), 1, "Meshes/cube.obj", "Textures/perlin_noise.png", "Textures/sand/Sand_norm.png");
 	
 }
 

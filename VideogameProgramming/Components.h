@@ -18,11 +18,13 @@ struct Transform2D
 
 struct Transform3D
 {
-    Transform3D(glm::vec3 position, float scale) {
+
+    Transform3D(glm::vec3 position, float scale, float rotation = 0) {
         this->position = position;
         this->scale = scale;
+        this->rotation = rotation;
     }
-
+    float rotation;
     glm::vec3 position;
     float scale;
 };
@@ -59,12 +61,14 @@ struct Sprite
 
 struct MeshComponent
 {
-    MeshComponent(const char* textureFilepath, const char* meshFilepath, const char* shaderName = "default") {
+    MeshComponent(const char* textureFilepath, const char* meshFilepath, const char* shaderName = "default", const char* normalsFilepath = "Textures/flat_normal.png") {
         this->textureFilepath = textureFilepath;
         this->meshFilepath = meshFilepath;
         this->shaderName = shaderName;
+        this->normalsFilepath = normalsFilepath;
     }
     const char* textureFilepath;
+    const char* normalsFilepath;
     const char* meshFilepath;
     const char* shaderName;
 };
@@ -102,6 +106,7 @@ struct CubeCollider
     float width = 0;
     float height = 0;
     float length = 0;
+    bool collidedWith = false;
 };
 
 struct ScriptComponent
@@ -111,4 +116,40 @@ struct ScriptComponent
     }
 
     int scriptId = -1;
+};
+
+//----------------- My Components --------------------
+struct UserComponent
+{
+    float renderDistance = 2000.0f;
+    int lives = 0;
+    bool hit = false;
+    bool destroyed = false;
+    int shipSpeed = 0;
+};
+
+struct EnemyComponent
+{
+    EnemyComponent(int points, int level, int id) {
+        this->points = points;
+        this->startLevel = level;
+        this->level = level;
+        this->id = id;
+    }
+    int points = 0;
+    int level = 0;
+    int startLevel = 0;
+    bool destroyed = false;
+    int id = 0;
+};
+struct BulletComponent
+{
+    BulletComponent(glm::vec3 pos, glm::vec3 dir) {
+        this->pos=pos;
+        this->dir=dir;
+    }
+ 
+    glm::vec3 pos;
+    glm::vec3 dir;
+
 };

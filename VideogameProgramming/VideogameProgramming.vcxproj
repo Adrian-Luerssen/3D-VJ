@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AsteroidScript.cpp" />
+    <ClCompile Include="BulletScript.cpp" />
     <ClCompile Include="Components.cpp" />
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="FirstPersonCameraScript.cpp" />
@@ -177,6 +179,8 @@
     <None Include="unlit.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AsteroidScript.h" />
+    <ClInclude Include="BulletScript.h" />
     <ClInclude Include="EBO.h" />
     <ClInclude Include="ECS.h" />
     <ClInclude Include="Components.h" />

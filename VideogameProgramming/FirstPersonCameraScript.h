@@ -23,4 +23,11 @@ private:
     float speed = 0.01f;
     float sensitivity = 100.0f;
 
+    float timeSinceJump = 0;
+    bool jump;
+    bool landed;
+    float eyeLevel = 8.0f;
+
+    bool cheat = false;
+    bool moveCam = true;
 };

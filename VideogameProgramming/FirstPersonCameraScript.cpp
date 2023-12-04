@@ -6,16 +6,22 @@ void FirstPersonCameraScript::startScript() {
 }
 
 void FirstPersonCameraScript::tickScript(float deltaTime) {
-
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+	{
+		speed = 0.2f;
+	}
+	else {
+		speed = 0.1f;
+	}
 	float speedDelta = speed * deltaTime;
 
 	float width = 800;
 	float height = 800;
-	
-	ComponentHandle<Camera> cam = entity->get<Camera>();
 
+	ComponentHandle<Camera> cam = entity->get<Camera>();
 	glm::vec3 currentPosition = cam->position;
 	glm::vec3 desiredPosition = cam->position;
+
 
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
@@ -33,14 +39,59 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 	{
 		desiredPosition += speedDelta * glm::normalize(glm::cross(cam->orientation, cam->up));
 	}
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
-		desiredPosition += speedDelta * cam->up;
+		moveCam = false;
+	}
+
+	/*if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !jump && landed)
+	{
+		//desiredPosition += speedDelta * cam->up;
+		jump = true;
+		cout << "jump" << endl;
+		timeSinceJump = 0;
+	}
+	if (glfwGetKey(window, GLFW_KEY_SPACE) != GLFW_PRESS && cheat) {
+		jump = false;
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 	{
 		desiredPosition += speedDelta * -cam->up;
 	}
+	timeSinceJump += deltaTime / 60.0f;
+	
+	if (jump) {
+		landed = false;
+		float dif = -0.2f * (pow((timeSinceJump - 2), 2)) + 1;
+		if (cheat) dif = 0.5f;
+		cout << dif << endl;
+		desiredPosition.y += dif;
+		if (dif < 0) {
+			jump = false;
+			cout << "end jump" << endl << endl;
+			timeSinceJump = 0;
+
+		}
+	}
+	else {
+		float dif = 0.2f * (pow((timeSinceJump - 2), 2)) - 1;
+		if (desiredPosition.y > 0)
+		{
+			//cout << "landing" << endl;
+			if (dif < 0) {
+				desiredPosition.y += dif;
+			}
+			else {
+				timeSinceJump = 0;
+			}
+		}
+		if (desiredPosition.y < 0) {
+			desiredPosition.y = 0;
+			cout << "Fall" << endl;
+			landed = true;
+		}
+
+	}*/
 
 	world->each<CubeCollider>([&](Entity* ent, ComponentHandle<CubeCollider> cubeColl) {
 
@@ -61,15 +112,29 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 			if (currentPosition.z <= pos.z - cubeColl->length) desiredPosition.z = pos.z - cubeColl->length;
 			if (currentPosition.z >= pos.z + cubeColl->length) desiredPosition.z = pos.z + cubeColl->length;
 			if (currentPosition.y <= pos.y - cubeColl->height) desiredPosition.y = pos.y - cubeColl->height;
-			if (currentPosition.y >= pos.y + cubeColl->height) desiredPosition.y = pos.y + cubeColl->height;
+			if (currentPosition.y >= pos.y + cubeColl->height) {
+				desiredPosition.y = pos.y + cubeColl->height;
+				//timeSinceJump = 0;
+				//landed = true;
+				//cout << "top" << endl;
+			}
 		}
 
-	});
+		});
+
+	//if (desiredPosition.y < -5) {
+	//	cout << "fallen out of world" << endl;
+	//	desiredPosition.y = 20;
+	//}
+	//cam->position.y = desiredPosition.y;
+	//cout << "pos: " << cam->position.x << ", " << cam->position.y << ", " << cam->position.z << endl;
 
 	cam->position = desiredPosition;
+	//cam->position.y += eyeLevel;
+
 
 	// Handles mouse inputs
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+	if (moveCam)
 	{
 		// Hides mouse cursor
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
@@ -102,7 +167,8 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 
 		m2 = glm::rotate(m2, glm::radians(-rotY), cam->up);
 
-		cam->orientation = m2 * glm::vec4(cam->orientation, 1.);
+		cam->orientation = m * m2 * glm::vec4(cam->orientation, 1.);
+		
 
 		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
 		glfwSetCursorPos(window, (width / 2), (height / 2));
@@ -114,5 +180,12 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 		// Makes sure the next time the camera looks around it doesn't jump
 		firstClick = true;
 	}
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+		//cout << "SHOOT" << endl;
+		moveCam = true;
+	}
+
+
+
 
 }
