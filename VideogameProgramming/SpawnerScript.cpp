@@ -7,7 +7,7 @@ void SpawnerScript::startScript()
 void SpawnerScript::tickScript(float deltaTime)
 {
 
-	
+		// spawn bullets on mouse click
 		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
 			if (firstClick) {
 				firstClick = false;
@@ -32,12 +32,17 @@ void SpawnerScript::tickScript(float deltaTime)
 		else  {
 			firstClick = true;
 		}
+		t += deltaTime / 2.0f;
+		if (t > delay) {
+			cout << "spawning new asteroid" << endl;
+			Entity* ent = world->create();
+			ent->assign<Transform3D>(glm::vec3(1000000, 1, 0.), 5);
+			ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide1.obj" , "default", "Textures/asteroids/normal.png");
+			ent->assign<EnemyComponent>(1, counter);
+			ent->assign<CubeCollider>(25, 25, 25);
+			counter++;
+			t = 0;
+		}
 		
-
-		//Entity* ent2d = world->create();
-		//ent2d->assign<Transform2D>(glm::vec2(100. + counter*100, 100.), 0.f, 1.f);
-		//ent2d->assign<Sprite>("Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.), "unlit");
-
-		//counter += 1;
 	
 }

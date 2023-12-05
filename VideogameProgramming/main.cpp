@@ -144,6 +144,11 @@ void SetupWorld() {
 	Entity* bulletManager = CreateEntity3DEmpty();
 	BulletScript* bulletScript = new BulletScript(window, world, bulletManager);
 	bulletManager->assign<ScriptComponent>(scriptManager->AddScript(bulletScript));
+
+	Entity* asteroidManager = CreateEntity3DEmpty();
+	AsteroidScript* asteroidScript = new AsteroidScript(window, world, asteroidManager);
+	asteroidManager->assign<ScriptComponent>(scriptManager->AddScript(asteroidScript));
+
 	Entity* skybox = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/background.png");
 	//Entity* skybox2 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/nebula_1.png");
 	//Entity* skybox3 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/nebula_2.png");
@@ -170,12 +175,12 @@ void SetupWorld() {
 	//Entity* obj2 = CreateEntity3DWithMesh(glm::vec3(-5., 1, 0.), 1, "Meshes/teapot.obj", "Textures/science_dog.png", "Textures/sand/Sand_norm.png");
 
 	//Entity* obj3 = CreateEntity3DWithMesh(glm::vec3(5., 1, 0.), 1, "Meshes/pipe.obj", "Textures/science_dog.png", "Textures/sand/Sand_norm.png");
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 10; i++) {
 		Entity* asteroid1 = CreateEntity3DWithMesh(glm::vec3(1000000, 1, 0.), 5, "Meshes/asteroids/asteroide1.obj", "Textures/asteroids/color.png", "Textures/asteroids/normal.png");
-		asteroid1->assign<EnemyComponent>(1, 1, i);
+		asteroid1->assign<EnemyComponent>(1, i);
 		asteroid1->assign<CubeCollider>(25, 25, 25);
-		AsteroidScript* asteroid_script = new AsteroidScript(window, world, asteroid1);
-		asteroid1->assign<ScriptComponent>(scriptManager->AddScript(asteroid_script));
+		//AsteroidScript* asteroid_script = new AsteroidScript(window, world, asteroid1);
+		//asteroid1->assign<ScriptComponent>(scriptManager->AddScript(asteroid_script));
 	}
 	
 	

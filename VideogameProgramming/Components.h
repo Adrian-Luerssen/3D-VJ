@@ -130,17 +130,15 @@ struct UserComponent
 
 struct EnemyComponent
 {
-    EnemyComponent(int points, int level, int id) {
+    EnemyComponent(int points, int id) {
         this->points = points;
-        this->startLevel = level;
-        this->level = level;
         this->id = id;
     }
     int points = 0;
-    int level = 0;
-    int startLevel = 0;
-    bool destroyed = false;
     int id = 0;
+    bool spawned = false;
+    glm::vec3 dir;
+    glm::vec3 startPos;
 };
 struct BulletComponent
 {

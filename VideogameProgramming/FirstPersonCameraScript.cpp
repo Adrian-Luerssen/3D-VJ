@@ -92,34 +92,32 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 		}
 
 	}*/
+	bool col = false;
+	
+	world->each<EnemyComponent>([&](Entity* ent, ComponentHandle<EnemyComponent> enemy) {
+		if (col) return;
+		ComponentHandle<Transform3D> enemyTransform = ent->get<Transform3D>();
+		ComponentHandle<CubeCollider> enemyCollider = ent->get<CubeCollider>();
 
-	world->each<CubeCollider>([&](Entity* ent, ComponentHandle<CubeCollider> cubeColl) {
+		// Check for collision along the X-axis
+		bool collisionX = desiredPosition.x  >= enemyTransform->position.x - enemyCollider->width &&
+			enemyTransform->position.x + enemyCollider->width >= desiredPosition.x;
 
-		glm::vec3 pos = ent->get<Transform3D>()->position;
+		// Check for collision along the Y-axis
+		bool collisionY = desiredPosition.y >= enemyTransform->position.y - enemyCollider->height &&
+			enemyTransform->position.y + enemyCollider->height >= desiredPosition.y ;
 
-		//Desired position inside cube
-		if (desiredPosition.x < pos.x + cubeColl->width && desiredPosition.x > pos.x - cubeColl->width &&
-			desiredPosition.y < pos.y + cubeColl->height && desiredPosition.y > pos.y - cubeColl->height &&
-			desiredPosition.z < pos.z + cubeColl->length && desiredPosition.z > pos.z - cubeColl->length) {
+		// Check for collision along the Z-axis
+		bool collisionZ = desiredPosition.z >= enemyTransform->position.z - enemyCollider->length &&
+			enemyTransform->position.z + enemyCollider->length >= desiredPosition.z;
 
-			time_t result = time(NULL);
-
-			char str[26];
-			ctime_s(str, sizeof str, &result);
-
-			if (currentPosition.x <= pos.x - cubeColl->width) desiredPosition.x = pos.x - cubeColl->width;
-			if (currentPosition.x >= pos.x + cubeColl->width) desiredPosition.x = pos.x + cubeColl->width;
-			if (currentPosition.z <= pos.z - cubeColl->length) desiredPosition.z = pos.z - cubeColl->length;
-			if (currentPosition.z >= pos.z + cubeColl->length) desiredPosition.z = pos.z + cubeColl->length;
-			if (currentPosition.y <= pos.y - cubeColl->height) desiredPosition.y = pos.y - cubeColl->height;
-			if (currentPosition.y >= pos.y + cubeColl->height) {
-				desiredPosition.y = pos.y + cubeColl->height;
-				//timeSinceJump = 0;
-				//landed = true;
-				//cout << "top" << endl;
-			}
+		// If there is a collision along all axes, then a collision occurred
+		if (collisionX && collisionY && collisionZ) {
+			// Collision happened, you can handle it here
+			cout << "lives --" << endl;
+			ent->getWorld()->destroy(ent);
+			col = true;
 		}
-
 		});
 
 	//if (desiredPosition.y < -5) {

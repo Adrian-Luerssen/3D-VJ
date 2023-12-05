@@ -15,7 +15,7 @@ public:
 
 private:
 
-    float delay = 5000.f;
+    float delay = 200.f;
     float t = 0.;
     int counter = 0;
     bool firstClick = true;

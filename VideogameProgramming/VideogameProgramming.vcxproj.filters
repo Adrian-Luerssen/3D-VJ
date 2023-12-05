@@ -185,10 +185,10 @@
       <Filter>Archivos de encabezado\Scripts</Filter>
     </ClInclude>
     <ClInclude Include="AsteroidScript.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\Scripts</Filter>
     </ClInclude>
     <ClInclude Include="BulletScript.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\Scripts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
