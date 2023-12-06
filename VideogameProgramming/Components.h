@@ -119,6 +119,9 @@ struct ScriptComponent
 };
 
 //----------------- My Components --------------------
+struct GameController {
+    bool pause = true;
+};
 struct UserComponent
 {
     float renderDistance = 2000.0f;

@@ -138,6 +138,7 @@ void SetupWorld() {
 	rs->setCamera(ent);
 
 	/**/Entity* spawner = CreateEntity3DEmpty();
+	spawner->assign<GameController>();
 	SpawnerScript* spawner_script = new SpawnerScript(window, world, spawner);
 	spawner->assign<ScriptComponent>(scriptManager->AddScript(spawner_script));
 

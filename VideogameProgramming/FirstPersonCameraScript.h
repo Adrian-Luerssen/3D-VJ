@@ -29,5 +29,5 @@ private:
     float eyeLevel = 8.0f;
 
     bool cheat = false;
-    bool moveCam = true;
+    bool moveCam = false;
 };

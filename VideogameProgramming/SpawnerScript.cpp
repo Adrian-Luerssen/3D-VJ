@@ -6,6 +6,9 @@ void SpawnerScript::startScript()
 
 void SpawnerScript::tickScript(float deltaTime)
 {
+	ComponentHandle<GameController> game;
+	world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {game = gameController; });
+	if (game->pause) return;
 
 		// spawn bullets on mouse click
 		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {

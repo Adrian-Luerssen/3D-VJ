@@ -21,7 +21,8 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 	ComponentHandle<Camera> cam = entity->get<Camera>();
 	glm::vec3 currentPosition = cam->position;
 	glm::vec3 desiredPosition = cam->position;
-
+	ComponentHandle<GameController> game;
+	world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {game = gameController; });
 
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
@@ -41,7 +42,7 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 	}
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
-		moveCam = false;
+		game->pause = true;
 	}
 
 	/*if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !jump && landed)
@@ -132,7 +133,7 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 
 
 	// Handles mouse inputs
-	if (moveCam)
+	if (!game->pause)
 	{
 		// Hides mouse cursor
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
@@ -180,7 +181,7 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 	}
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
 		//cout << "SHOOT" << endl;
-		moveCam = true;
+		game->pause = false;
 	}
 
 

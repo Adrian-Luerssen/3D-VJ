@@ -5,6 +5,9 @@
 
 
 void AsteroidScript::tickScript(float deltaTime) {
+	ComponentHandle<GameController> game;
+	world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {game = gameController; });
+	if (game->pause) return;
 	float renderDistance = 5000;
 	glm::vec3 userPos = glm::vec3(0);
 	world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> userComp) {

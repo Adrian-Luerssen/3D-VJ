@@ -5,6 +5,9 @@ void BulletScript::startScript() {
 }
 
 void BulletScript::tickScript(float deltaTime) {
+	ComponentHandle<GameController> game;
+	world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {game = gameController; });
+	if (game->pause) return;
 	world->each<BulletComponent>([&](Entity* ent, ComponentHandle<BulletComponent> bullet) {
 		ComponentHandle<Transform3D> transform = ent->get<Transform3D>();
 		float renderDistance = 5000;
