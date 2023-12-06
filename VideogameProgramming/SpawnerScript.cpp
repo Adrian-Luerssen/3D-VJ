@@ -18,12 +18,12 @@ void SpawnerScript::tickScript(float deltaTime)
 					userPos = ent->get<Camera>()->position;
 					userLookAt = ent->get<Camera>()->orientation;
 					});
-				userLookAt = glm::normalize(userLookAt);
-				userLookAt = -userLookAt;
+				userLookAt = glm::normalize(-userLookAt);
+				//userLookAt = -userLookAt;
 				cout << "spawned at "<<userPos.x<<","<<userPos.y<<","<<userPos.z << endl;
 				Entity* ent = world->create();
 				ent->assign<Transform3D>(userPos, 5);
-				ent->assign<MeshComponent>("Textures/flat_normal.png","Meshes/cube.obj");
+				ent->assign<MeshComponent>("Textures/flat_normal.png","Meshes/cube.obj","bullet");
 				ent->assign<BulletComponent>(userPos, userLookAt);
 				ent->assign<CubeCollider>(2, 2, 2);
 			}

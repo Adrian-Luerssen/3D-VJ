@@ -25,6 +25,7 @@ class Shader
 		void SetMatrix4(const char* name, glm::mat4 data);
 		void SetVector3f(const char* name, glm::vec3 data);
 		void SetFloat(const char* name, float data);
+		void SetBoolean(const char* name, bool data);
 
 		void SetTextureSampler(const char* name, GLint textureUnit);
 

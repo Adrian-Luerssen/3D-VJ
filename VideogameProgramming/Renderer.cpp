@@ -30,6 +30,7 @@ void Renderer::Init()
     shaderInverted = std::make_shared<Shader>("unlit.vert", "inverted.frag");
     shaderRepeating = std::make_shared<Shader>("unlit.vert", "repeating.frag");
     shaderSkybox = std::make_shared<Shader>("skybox.vert", "skybox.frag");
+    shaderBullet = std::make_shared<Shader>("bullet.vert", "bullet.frag");
 
     /*GLint tex0handle = glGetUniformLocation(shaderDefault->ID, "tex0");
     GLint tex1handle = glGetUniformLocation(shaderDefault->ID, "tex1");
@@ -100,6 +101,9 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
 {
 
     std::shared_ptr<Shader> shader = shaderDefault;
+    if (shaderName == "bullet") {
+        shader = shaderBullet;
+    }
 
     // prepare transformations
     shader->Activate();
@@ -118,8 +122,9 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
     shader->SetMatrix4("model", model);
     shader->SetMatrix4("view", view);
     shader->SetMatrix4("proj", proj);
-
-
+    if (shaderName == "bullet") {
+        shader->SetBoolean("applyBlur", true);
+    }
     glActiveTexture(GL_TEXTURE0 + 0);
     texture.Bind();
     shader->SetTextureSampler("tex0", 0);

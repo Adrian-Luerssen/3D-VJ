@@ -163,12 +163,11 @@ void SetupWorld() {
 
 	// 2D sprites not drawn anymore?
 
-	Entity* sprite = CreateEntity2D(glm::vec2(100., 100.), 0.f, 1.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
+	Entity* sprite = CreateEntity2D(glm::vec2(100., 100.), 0.f, 10.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
 
 	Entity* sprite2 = CreateEntity2D(glm::vec2(250., 100.), 0.f, 1.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
 
-	// MY OWN TEXTURES WONT LOAD
-	//Entity* sprite3 = CreateEntity2D(glm::vec2(100., 250.), 0.f, 1.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
+	Entity* sprite3 = CreateEntity2D(glm::vec2(100., 250.), 0.f, 1.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
 
 	//Entity* obj1 = CreateEntity3DWithMesh(glm::vec3(0., 1.5, 0.),1, "Meshes/wizard.obj", "Textures/wizard_texture.png", "Textures/sand/Sand_norm.png");
 

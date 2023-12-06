@@ -169,6 +169,8 @@
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="bullet.frag" />
+    <None Include="bullet.vert" />
     <None Include="default.frag" />
     <None Include="default.vert" />
     <None Include="inverted.frag" />
