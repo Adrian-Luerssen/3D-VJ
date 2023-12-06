@@ -8,32 +8,40 @@ void SpawnerScript::tickScript(float deltaTime)
 {
 	ComponentHandle<GameController> game;
 	world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {game = gameController; });
-	if (game->pause) return;
+	if (game->pause) {
+		firstSpawn = true;
+		return;
+	}else{
 
 		// spawn bullets on mouse click
 		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-			if (firstClick) {
-				firstClick = false;
-				t = 0;
-				glm::vec3 userPos = glm::vec3(0.0f);
-				glm::vec3 userLookAt = glm::vec3(0.0f);
-				world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> userComp) {
-					userPos = ent->get<Camera>()->position;
-					userLookAt = ent->get<Camera>()->orientation;
-					});
-				userLookAt = glm::normalize(-userLookAt);
-				//userLookAt = -userLookAt;
-				cout << "spawned at "<<userPos.x<<","<<userPos.y<<","<<userPos.z << endl;
-				Entity* ent = world->create();
-				ent->assign<Transform3D>(userPos, 5);
-				ent->assign<MeshComponent>("Textures/flat_normal.png","Meshes/cube.obj","bullet");
-				ent->assign<BulletComponent>(userPos, userLookAt);
-				ent->assign<CubeCollider>(2, 2, 2);
+			if (!firstSpawn){
+				if (firstClick) {
+					firstClick = false;
+					t = 0;
+					glm::vec3 userPos = glm::vec3(0.0f);
+					glm::vec3 userLookAt = glm::vec3(0.0f);
+					world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> userComp) {
+						userPos = ent->get<Camera>()->position;
+						userLookAt = ent->get<Camera>()->orientation;
+						});
+					userLookAt = glm::normalize(-userLookAt);
+					//userLookAt = -userLookAt;
+					cout << "spawned at "<<userPos.x<<","<<userPos.y<<","<<userPos.z << endl;
+					Entity* ent = world->create();
+					ent->assign<Transform3D>(userPos, 5);
+					ent->assign<MeshComponent>("Textures/flat_normal.png","Meshes/cube.obj","bullet");
+					ent->assign<BulletComponent>(userPos, userLookAt);
+					ent->assign<CubeCollider>(2, 2, 2);
+				}
 			}
 			
 		}
 		else  {
 			firstClick = true;
+			if (firstSpawn) {
+				firstSpawn = false;
+			}
 		}
 		t += deltaTime / 2.0f;
 		if (t > delay) {
@@ -47,5 +55,5 @@ void SpawnerScript::tickScript(float deltaTime)
 			t = 0;
 		}
 		
-	
+	}
 }
