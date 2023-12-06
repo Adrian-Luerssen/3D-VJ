@@ -96,7 +96,7 @@ void Renderer::DrawSprite(Texture& texture, glm::mat4 proj, glm::vec2 position,
 
 double prevTime = glfwGetTime();
 
-void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm::vec3 position, float scale,float rotation, Camera cam,
+void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm::vec3 position, float scale, glm::vec3 rotation, Camera cam,
     Texture& normalsTexture,float far, string shaderName)
 {
 
@@ -112,18 +112,29 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 proj = glm::mat4(1.0f);
 
-    model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 0.1f, 0.0f));
+    //model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 0.1f, 0.0f));
+    if (rotation != glm::vec3(0.0f)) {
+        //cout << rotation.x << ", " << rotation.y << ", " << rotation.z << endl;
+    }
     model = glm::translate(model, glm::vec3(position));
+    model = glm::rotate(model, rotation.x, glm::vec3(0.1f, 0.0f, 0.0f)); // Rotate around X axis
+    model = glm::rotate(model, rotation.y, glm::vec3(0.0f, 0.1f, 0.0f)); // Rotate around Y axis
+    model = glm::rotate(model, rotation.z, glm::vec3(0.0f, 0.0f, 0.1f)); // Rotate around Z axis
+    
     model = glm::scale(model, glm::vec3(scale, scale, scale));
-
-    view = glm::lookAt(cam.position, cam.position + cam.orientation, cam.up);
+   
+    view = glm::lookAt(cam.eye, cam.target+cam.front, cam.up);
+    
     proj = glm::perspective(glm::radians(45.0f), (float)(800 / 800), 0.1f, far);
 
-    shader->SetMatrix4("model", model);
+    
     shader->SetMatrix4("view", view);
     shader->SetMatrix4("proj", proj);
     if (shaderName == "bullet") {
-        shader->SetBoolean("applyBlur", true);
+        shader->SetMatrix4("model", model);
+    }
+    else {
+        shader->SetMatrix4("model", model);
     }
     glActiveTexture(GL_TEXTURE0 + 0);
     texture.Bind();
@@ -155,7 +166,7 @@ void Renderer::DrawSkybox(Mesh& mesh, Texture& texture, glm::mat4 projection, Ca
     model = glm::rotate(model, glm::radians(0.f), glm::vec3(0.0f, 0.1f, 0.0f));
     model = glm::translate(model, glm::vec3(0, 0, 0));
 
-    view = glm::lookAt(glm::vec3(0, 0, 0), cam.orientation, cam.up);
+    view = glm::lookAt(glm::vec3(0, 0, 0), cam.front, cam.up);
     proj = glm::perspective(glm::radians(45.0f), (float)(800 / 800), 0.1f, 100.0f);
 
     shader->SetMatrix4("model", model);

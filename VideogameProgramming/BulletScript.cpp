@@ -9,9 +9,9 @@ void BulletScript::tickScript(float deltaTime) {
 		ComponentHandle<Transform3D> transform = ent->get<Transform3D>();
 		float renderDistance = 5000;
 		glm::vec3 userPos = glm::vec3(0);
-		world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> userComp) {
-			renderDistance = userComp->renderDistance;
-			userPos = ent->get<Camera>()->position;
+		world->each<Camera>([&](Entity* ent, ComponentHandle<Camera> cam) {
+			renderDistance = cam->renderDistance;
+			userPos = cam->eye;
 			});
 		renderDistance += renderDistance / 10;
 		glm::vec3 entityPos = ent->get<Transform3D>()->position;
@@ -32,7 +32,12 @@ void BulletScript::tickScript(float deltaTime) {
 		//cout << "pos: " << transform->position.x << ", " << transform->position.y << endl;
 
 		transform->position -= bullet->dir *deltaTime / 3.0f;
+		
+
+		// Calculate the rotation angles needed to align the object with the camera direction
+		
 		});
+	
 	
 
 	

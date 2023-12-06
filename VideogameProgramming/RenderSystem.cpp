@@ -16,7 +16,7 @@ void RenderSystem::setCamera(Entity* camera)
 void RenderSystem::tick(World* world, float deltaTime) 
 {
     glEnable(GL_CULL_FACE);
-
+    
     world->each<Skybox>([&](Entity* ent, ComponentHandle<Skybox> meshComp) {
 
         Texture texture = textureManager.GetTexture(meshComp->textureFilepath);
@@ -41,7 +41,7 @@ void RenderSystem::tick(World* world, float deltaTime)
         Texture normalsTexture = textureManager.GetTexture(meshComp->normalsFilepath);
 
         Mesh mesh = meshManager.GetMesh(meshComp->meshFilepath);
-        float far = camera->get<UserComponent>()->renderDistance;
+        float far = camera->get<Camera>()->renderDistance;
         glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)(width / height), 0.1f, far);
 
         ComponentHandle<Camera> cam = camera->get<Camera>();

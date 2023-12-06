@@ -27,6 +27,7 @@
 
 #include "AsteroidScript.h"
 #include "BulletScript.h"
+#include "UserScript.h"
 using std::cout; 
 using std::endl;
 using std::chrono::duration_cast;
@@ -130,7 +131,7 @@ void SetupWorld() {
 	ScriptManager* scriptManager = scriptSystem->getScriptManager();
 
 	Entity* ent = CreateCamera(glm::vec3(30.0f, 2.f, 30.0f));
-	ent->assign<UserComponent>();
+	//ent->assign<UserComponent>();
 	FirstPersonCameraScript* fps = new FirstPersonCameraScript(window, world, ent);
 	
 	ent->assign<ScriptComponent>(scriptManager->AddScript(fps));
@@ -154,7 +155,7 @@ void SetupWorld() {
 	//Entity* skybox3 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/nebula_2.png");
 	Entity* skybox4 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/space.png");
 
-	//Entity* floor = CreateEntity3DWithMesh(glm::vec3(32, 0, 18), 30, "Meshes/plane.obj", "Textures/background_brown.png", "Textures/sand/Sand_norm.png");
+	Entity* floor = CreateEntity3DWithMesh(glm::vec3(32, 0, 18), 30, "Meshes/plane.obj", "Textures/background_brown.png", "Textures/sand/Sand_norm.png");
 
 
 	//Entity* wall = CreateEntity3DWithMesh(glm::vec3(4, 2, 4), 2, "Meshes/asteroide1.obj", "Textures/sand/Sand_norm.png", "Textures/asteroide1/Mat1_Normal_DirectX.png");
@@ -169,18 +170,21 @@ void SetupWorld() {
 
 	Entity* sprite3 = CreateEntity2D(glm::vec2(100., 250.), 0.f, 1.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
 
-	//Entity* obj1 = CreateEntity3DWithMesh(glm::vec3(0., 1.5, 0.),1, "Meshes/wizard.obj", "Textures/wizard_texture.png", "Textures/sand/Sand_norm.png");
+	Entity* obj1 = CreateEntity3DWithMesh(glm::vec3(0., 1.5, 0.),3, "Meshes/cube2.obj", "Textures/cube_or_test.png", "Textures/sand/Sand_norm.png");
+	obj1->assign<UserComponent>();
+	UserScript* us = new UserScript(window, world, obj1);
 
+	obj1->assign<ScriptComponent>(scriptManager->AddScript(us));
 	//Entity* obj2 = CreateEntity3DWithMesh(glm::vec3(-5., 1, 0.), 1, "Meshes/teapot.obj", "Textures/science_dog.png", "Textures/sand/Sand_norm.png");
 
 	//Entity* obj3 = CreateEntity3DWithMesh(glm::vec3(5., 1, 0.), 1, "Meshes/pipe.obj", "Textures/science_dog.png", "Textures/sand/Sand_norm.png");
-	for (int i = 0; i < 10; i++) {
+	/*for (int i = 0; i < 10; i++) {
 		Entity* asteroid1 = CreateEntity3DWithMesh(glm::vec3(1000000, 1, 0.), 5, "Meshes/asteroids/asteroide1.obj", "Textures/asteroids/color.png", "Textures/asteroids/normal.png");
 		asteroid1->assign<EnemyComponent>(1, i);
 		asteroid1->assign<CubeCollider>(25, 25, 25);
 		//AsteroidScript* asteroid_script = new AsteroidScript(window, world, asteroid1);
 		//asteroid1->assign<ScriptComponent>(scriptManager->AddScript(asteroid_script));
-	}
+	}*/
 	
 	
 	/*Entity* asteroid2 = CreateEntity3DWithMesh(glm::vec3(10., 1, 0.), 0.5, "Meshes/asteroids/asteroide2.obj", "Textures/asteroids/color.png", "Textures/asteroids/normal.png");

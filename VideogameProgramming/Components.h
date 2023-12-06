@@ -19,27 +19,34 @@ struct Transform2D
 struct Transform3D
 {
 
-    Transform3D(glm::vec3 position, float scale, float rotation = 0) {
+    Transform3D(glm::vec3 position, float scale, glm::vec3 rotation = glm::vec3(0.0f)) {
         this->position = position;
         this->scale = scale;
         this->rotation = rotation;
     }
-    float rotation;
+    glm::vec3 rotation;
     glm::vec3 position;
     float scale;
 };
 
 struct Camera
 {
-    Camera(glm::vec3 position, glm::vec3 orientation, glm::vec3 up) {
-        this->position = position;
-        this->orientation = orientation;
+    Camera(glm::vec3 eye, glm::vec3 front, glm::vec3 up, float renderDistance =2000.0f) {
+        this->eye = eye;
+        this->front = front;
         this->up = up;
+        this->renderDistance = renderDistance;
+        this->target = front;
     }
 
-    glm::vec3 position;
-    glm::vec3 orientation;
+
+    float renderDistance;
+    float apitch;
+    float ayaw;
+    glm::vec3 eye;
+    glm::vec3 front;
     glm::vec3 up;
+    glm::vec3 target;
 };
 
 struct Sprite
@@ -121,11 +128,12 @@ struct ScriptComponent
 //----------------- My Components --------------------
 struct UserComponent
 {
-    float renderDistance = 2000.0f;
     int lives = 0;
     bool hit = false;
     bool destroyed = false;
     int shipSpeed = 0;
+
+    float apitch, ayaw;
 };
 
 struct EnemyComponent

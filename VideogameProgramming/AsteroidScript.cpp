@@ -7,9 +7,9 @@
 void AsteroidScript::tickScript(float deltaTime) {
 	float renderDistance = 5000;
 	glm::vec3 userPos = glm::vec3(0);
-	world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> userComp) {
-		renderDistance = userComp->renderDistance;
-		userPos = ent->get<Camera>()->position;
+	world->each<Camera>([&](Entity* ent, ComponentHandle<Camera> camera) {
+		renderDistance = camera->renderDistance;
+		userPos = camera->eye;
 		});
 	renderDistance += renderDistance / 10;
 
@@ -44,7 +44,7 @@ void AsteroidScript::tickScript(float deltaTime) {
 			transform->position += (enemyComp->dir * deltaTime / 10.f);
 			//transform->rotation += deltaTime / 3.f;
 			if (!(hp <= 0)) {
-				//transform->rotation += deltaTime / 12.f;
+				transform->rotation += deltaTime / 300.f;
 			}
 
 			//cout << "change: " << this->dirX<<", "<<this->dirY << endl;
