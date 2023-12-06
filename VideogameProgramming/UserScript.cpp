@@ -153,7 +153,7 @@ void UserScript::tickScript(float deltaTime) {
 		// Calculates the rotation matrix based on mouse input
 		user->ayaw += rotY;
 		user->apitch -= rotX;
-		if (user->apitch > 89.0f)
+		/**/if (user->apitch > 89.0f)
 			user->apitch = 89.0f;	// doesnt allow the user to over rotate
 		if (user->apitch < -89.0f)
 			user->apitch = -89.0f;
@@ -194,15 +194,13 @@ void UserScript::tickScript(float deltaTime) {
 
 		// Calculate the camera's position based on the object's rotation (pitch and yaw)
 		float distance = 100.0f; // Adjust the distance as needed
-		float angleAroundPlayer = 0.0f;
-		float theta = transf->rotation.y + angleAroundPlayer;
-		float offsetX = (distance * cos(glm::radians(user->apitch)) * sin(theta));
-		float offsetZ = (distance * sin(glm::radians(user->ayaw)) * cos(theta));
-		cam->eye.x = transf->position.x - offsetX;
-		cam->eye.z = transf->position.z - offsetZ;
-		cam->eye.y = transf->position.y;
+		glm::vec3 offset = glm::vec3(0.0f, 0.0f, distance);
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(transf->rotation.y), glm::vec3(0, 1, 0));
+		rotationMatrix = glm::rotate(rotationMatrix, glm::radians(transf->rotation.x), glm::vec3(1, 0, 0));
+		cam->eye = transf->position - glm::vec3(rotationMatrix * glm::vec4(offset, 1.0f));
+
 		// Assuming you want the camera to always face the back of the object
-		//cam->front = glm::normalize(transf->position - cam->eye);
+		cam->front = glm::normalize(transf->position - cam->eye);
 		});
 
 
