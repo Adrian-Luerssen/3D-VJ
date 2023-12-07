@@ -130,7 +130,6 @@ void SetupWorld() {
 	ScriptManager* scriptManager = scriptSystem->getScriptManager();
 
 	Entity* ent = CreateCamera(glm::vec3(30.0f, 2.f, 30.0f));
-	ent->assign<UserComponent>();
 	FirstPersonCameraScript* fps = new FirstPersonCameraScript(window, world, ent);
 	
 	ent->assign<ScriptComponent>(scriptManager->AddScript(fps));
@@ -153,7 +152,7 @@ void SetupWorld() {
 	Entity* skybox = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/background.png");
 	//Entity* skybox2 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/nebula_1.png");
 	//Entity* skybox3 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/nebula_2.png");
-	Entity* skybox4 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/space.png");
+	Entity* skybox4 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/space2.png");
 
 	//Entity* floor = CreateEntity3DWithMesh(glm::vec3(32, 0, 18), 30, "Meshes/plane.obj", "Textures/background_brown.png", "Textures/sand/Sand_norm.png");
 
@@ -162,7 +161,7 @@ void SetupWorld() {
 	//wall->assign<CubeCollider>(2.1, 2.1, 2.1);
 	//wall->assign<UserComponent>();
 
-	// 2D sprites not drawn anymore?
+	
 
 	Entity* sprite = CreateEntity2D(glm::vec2(100., 100.), 0.f, 10.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
 
@@ -170,8 +169,12 @@ void SetupWorld() {
 
 	Entity* sprite3 = CreateEntity2D(glm::vec2(100., 250.), 0.f, 1.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
 
-	//Entity* obj1 = CreateEntity3DWithMesh(glm::vec3(0., 1.5, 0.),1, "Meshes/wizard.obj", "Textures/wizard_texture.png", "Textures/sand/Sand_norm.png");
-
+	Entity* obj1 = CreateEntity3DWithMesh(glm::vec3(0., 1.5, 0.),1, "Meshes/spaceship.obj", "Textures/spaceship/color.png", "Textures/spaceship/normal.png");
+	obj1->assign<UserComponent>();
+	obj1->get<MeshComponent>()->roughnessFilepath = "Textures/spaceship/roughness.png";
+	obj1->get<MeshComponent>()->metallicFilepath = "Textures/spaceship/metallic.png";
+	obj1->get<MeshComponent>()->emissiveFilepath = "Textures/spaceship/emissive.png";
+	obj1->get<MeshComponent>()->shaderName = "user";
 	//Entity* obj2 = CreateEntity3DWithMesh(glm::vec3(-5., 1, 0.), 1, "Meshes/teapot.obj", "Textures/science_dog.png", "Textures/sand/Sand_norm.png");
 
 	//Entity* obj3 = CreateEntity3DWithMesh(glm::vec3(5., 1, 0.), 1, "Meshes/pipe.obj", "Textures/science_dog.png", "Textures/sand/Sand_norm.png");

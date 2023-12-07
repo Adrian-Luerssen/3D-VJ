@@ -31,6 +31,7 @@ void Renderer::Init()
     shaderRepeating = std::make_shared<Shader>("unlit.vert", "repeating.frag");
     shaderSkybox = std::make_shared<Shader>("skybox.vert", "skybox.frag");
     shaderBullet = std::make_shared<Shader>("bullet.vert", "bullet.frag");
+    shaderUser = std::make_shared<Shader>("default.vert", "user.frag");
 
     /*GLint tex0handle = glGetUniformLocation(shaderDefault->ID, "tex0");
     GLint tex1handle = glGetUniformLocation(shaderDefault->ID, "tex1");
@@ -96,13 +97,16 @@ void Renderer::DrawSprite(Texture& texture, glm::mat4 proj, glm::vec2 position,
 
 double prevTime = glfwGetTime();
 
-void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm::vec3 position, float scale,float rotation, Camera cam,
+void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm::vec3 position, float scale, glm::vec3 rotation, Camera cam,
     Texture& normalsTexture,float far, string shaderName)
 {
 
     std::shared_ptr<Shader> shader = shaderDefault;
     if (shaderName == "bullet") {
         shader = shaderBullet;
+    }
+    else if (shaderName == "user") {
+        shader = shaderUser;
     }
 
     // prepare transformations
@@ -112,7 +116,9 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 proj = glm::mat4(1.0f);
 
-    model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 0.1f, 0.0f));
+    model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(0.1f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 0.1f, 0.0f));
+    model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 0.1f));
     model = glm::translate(model, glm::vec3(position));
     model = glm::scale(model, glm::vec3(scale, scale, scale));
 
@@ -138,6 +144,65 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
     mesh.VAO.Unbind();
 }
 
+void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm::vec3 position, float scale, glm::vec3 rotation, Camera cam, Texture& normalsTexture, Texture& rough, Texture& metallic, Texture& emissive, float far,
+    string shaderName)
+{
+
+    std::shared_ptr<Shader> shader = shaderDefault;
+    if (shaderName == "bullet") {
+        shader = shaderBullet;
+    }
+    else if (shaderName == "user") {
+        shader = shaderUser;
+    }
+
+    // prepare transformations
+    shader->Activate();
+
+    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 view = glm::mat4(1.0f);
+    glm::mat4 proj = glm::mat4(1.0f);
+
+    model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(0.1f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 0.1f, 0.0f));
+    model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 0.1f));
+    model = glm::translate(model, glm::vec3(position));
+    model = glm::scale(model, glm::vec3(scale, scale, scale));
+
+    view = glm::lookAt(cam.position, cam.position + cam.orientation, cam.up);
+    proj = glm::perspective(glm::radians(45.0f), (float)(800 / 800), 0.1f, far);
+
+    shader->SetMatrix4("model", model);
+    shader->SetMatrix4("view", view);
+    shader->SetMatrix4("proj", proj);
+    if (shaderName == "bullet") {
+        shader->SetBoolean("applyBlur", true);
+    }
+    glActiveTexture(GL_TEXTURE0 + 0);
+    texture.Bind();
+    shader->SetTextureSampler("tex0", 0);
+
+    glActiveTexture(GL_TEXTURE0 + 1);
+    normalsTexture.Bind();
+    shader->SetTextureSampler("texNormals", 1);
+    if (shaderName == "user") {
+        glActiveTexture(GL_TEXTURE0 + 2);
+        rough.Bind();
+        shader->SetTextureSampler("texRough", 2);
+
+        glActiveTexture(GL_TEXTURE0 + 3);
+        metallic.Bind();
+        shader->SetTextureSampler("texMetallic", 3);
+
+        glActiveTexture(GL_TEXTURE0 + 4);
+        emissive.Bind();
+        shader->SetTextureSampler("texEmissive", 4);
+    }
+
+    mesh.VAO.Bind();
+    glDrawElements(GL_TRIANGLES, mesh.indices.size(), GL_UNSIGNED_INT, 0);
+    mesh.VAO.Unbind();
+}
 
 
 void Renderer::DrawSkybox(Mesh& mesh, Texture& texture, glm::mat4 projection, Camera cam)

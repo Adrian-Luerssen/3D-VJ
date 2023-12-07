@@ -12,9 +12,9 @@ void BulletScript::tickScript(float deltaTime) {
 		ComponentHandle<Transform3D> transform = ent->get<Transform3D>();
 		float renderDistance = 5000;
 		glm::vec3 userPos = glm::vec3(0);
-		world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> userComp) {
-			renderDistance = userComp->renderDistance;
-			userPos = ent->get<Camera>()->position;
+		world->each<Camera>([&](Entity* ent, ComponentHandle<Camera> cam) {
+			renderDistance = cam->renderDistance;
+			userPos = cam->position;
 			});
 		renderDistance += renderDistance / 10;
 		glm::vec3 entityPos = ent->get<Transform3D>()->position;
@@ -66,8 +66,8 @@ void BulletScript::CheckCollisions(Entity* entity) {
 		if (collisionX && collisionY && collisionZ) {
 			// Collision happened, you can handle it here
 			cout << "COLLISION!!!!!!!!!!!" << endl;
+			ent->get<EnemyComponent>()->destroyed = true;
 			ent->getWorld()->destroy(entity);
-			ent->getWorld()->destroy(ent);
 			col = true;
 		}
 		});

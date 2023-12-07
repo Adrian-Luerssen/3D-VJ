@@ -41,13 +41,21 @@ void RenderSystem::tick(World* world, float deltaTime)
         Texture normalsTexture = textureManager.GetTexture(meshComp->normalsFilepath);
 
         Mesh mesh = meshManager.GetMesh(meshComp->meshFilepath);
-        float far = camera->get<UserComponent>()->renderDistance;
+        float far = camera->get<Camera>()->renderDistance;
         glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)(width / height), 0.1f, far);
 
         ComponentHandle<Camera> cam = camera->get<Camera>();
-
-     
-        rend.DrawMesh(mesh, texture, proj, transform->position, transform->scale, transform->rotation, cam.get(), normalsTexture, far, meshComp->shaderName);
+        ComponentHandle<UserComponent> user = ent->get<UserComponent>();
+        if (user == NULL) {
+            rend.DrawMesh(mesh, texture, proj, transform->position, transform->scale, transform->rotation, cam.get(), normalsTexture, far, meshComp->shaderName);
+        }
+        else {
+            Texture roughTexture = textureManager.GetTexture(meshComp->roughnessFilepath);
+            Texture metallicTexture = textureManager.GetTexture(meshComp->metallicFilepath);
+            Texture emissiveTexture = textureManager.GetTexture(meshComp->emissiveFilepath);
+            rend.DrawMesh(mesh, texture, proj, transform->position, transform->scale, transform->rotation, cam.get(), normalsTexture, roughTexture,metallicTexture,emissiveTexture,far, meshComp->shaderName);
+        }
+        
         
 
         

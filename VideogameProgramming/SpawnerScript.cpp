@@ -20,16 +20,27 @@ void SpawnerScript::tickScript(float deltaTime)
 					firstClick = false;
 					t = 0;
 					glm::vec3 userPos = glm::vec3(0.0f);
+					glm::vec3 objRot = glm::vec3(0.0f);
 					glm::vec3 userLookAt = glm::vec3(0.0f);
-					world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> userComp) {
-						userPos = ent->get<Camera>()->position;
-						userLookAt = ent->get<Camera>()->orientation;
+					world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> user) {
+						userPos = ent->get<Transform3D>()->position;
+						objRot = ent->get<Transform3D>()->rotation;
+						float pitch = glm::radians(objRot.x);
+						float yaw = glm::radians(objRot.y);
+						float roll = glm::radians(objRot.z);
+
+						// Calculate the direction vector (forward vector) based on Euler angles
+						glm::vec3 forwardVector;
+						forwardVector.x = sin(yaw) * cos(pitch);
+						forwardVector.y = sin(pitch);
+						forwardVector.z = cos(yaw)* cos(pitch);
+						userLookAt = glm::normalize(-forwardVector);
 						});
-					userLookAt = glm::normalize(-userLookAt);
+					
 					//userLookAt = -userLookAt;
 					cout << "spawned at "<<userPos.x<<","<<userPos.y<<","<<userPos.z << endl;
 					Entity* ent = world->create();
-					ent->assign<Transform3D>(userPos, 5);
+					ent->assign<Transform3D>(userPos, 5,objRot);
 					ent->assign<MeshComponent>("Textures/flat_normal.png","Meshes/cube.obj","bullet");
 					ent->assign<BulletComponent>(userPos, userLookAt);
 					ent->assign<CubeCollider>(2, 2, 2);

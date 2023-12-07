@@ -184,6 +184,13 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 		game->pause = false;
 	}
 
+	world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> user) {
+		/*
+		APPLY ROTATION FROM CAMERA TO USER COMPONENT
+		*/
+		});
+
+
 
 
 

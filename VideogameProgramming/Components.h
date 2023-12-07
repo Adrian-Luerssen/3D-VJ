@@ -19,24 +19,26 @@ struct Transform2D
 struct Transform3D
 {
 
-    Transform3D(glm::vec3 position, float scale, float rotation = 0) {
+    Transform3D(glm::vec3 position, float scale, glm::vec3 rotation = glm::vec3(0)) {
         this->position = position;
         this->scale = scale;
         this->rotation = rotation;
     }
-    float rotation;
+    glm::vec3 rotation;
     glm::vec3 position;
     float scale;
 };
 
 struct Camera
 {
-    Camera(glm::vec3 position, glm::vec3 orientation, glm::vec3 up) {
+    Camera(glm::vec3 position, glm::vec3 orientation, glm::vec3 up,float renderDistance = 2000.0f) {
         this->position = position;
         this->orientation = orientation;
         this->up = up;
+        this->renderDistance = renderDistance;
     }
 
+    float renderDistance;
     glm::vec3 position;
     glm::vec3 orientation;
     glm::vec3 up;
@@ -61,7 +63,8 @@ struct Sprite
 
 struct MeshComponent
 {
-    MeshComponent(const char* textureFilepath, const char* meshFilepath, const char* shaderName = "default", const char* normalsFilepath = "Textures/flat_normal.png") {
+    MeshComponent(const char* textureFilepath, const char* meshFilepath, const char* shaderName = "default", const char* normalsFilepath = "Textures/flat_normal.png"
+        , const char* roughnessFilepath = "none", const char* emissiveFilepath = "none", const char* metallicFilepath = "none") {
         this->textureFilepath = textureFilepath;
         this->meshFilepath = meshFilepath;
         this->shaderName = shaderName;
@@ -71,6 +74,10 @@ struct MeshComponent
     const char* normalsFilepath;
     const char* meshFilepath;
     const char* shaderName;
+
+    const char* roughnessFilepath;
+    const char* emissiveFilepath;
+    const char* metallicFilepath;
 };
 
 struct Skybox
@@ -124,7 +131,7 @@ struct GameController {
 };
 struct UserComponent
 {
-    float renderDistance = 2000.0f;
+
     int lives = 0;
     bool hit = false;
     bool destroyed = false;
@@ -142,6 +149,8 @@ struct EnemyComponent
     bool spawned = false;
     glm::vec3 dir;
     glm::vec3 startPos;
+    bool destroyed = false;
+    float ticksSinceDestroyed = 0;
 };
 struct BulletComponent
 {
@@ -153,4 +162,14 @@ struct BulletComponent
     glm::vec3 pos;
     glm::vec3 dir;
 
+};
+
+struct TemporaryComponent {
+    TemporaryComponent(glm::vec3 dir,float duration) {
+        this->dir = dir;
+        this->duration = duration;
+    }
+    glm::vec3 dir;
+    float duration;
+    float timeAlive = 0;
 };
