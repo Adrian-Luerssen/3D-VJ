@@ -20,6 +20,8 @@ void UserScript::tickScript(float deltaTime) {
 	world->each<Camera>([&](Entity* ent, ComponentHandle<Camera> camera) {
 		cam = camera;
 		});
+	ComponentHandle<GameController> game;
+	world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {game = gameController; });
 
 	ComponentHandle<UserComponent> user = entity->get<UserComponent>();
 	ComponentHandle<Transform3D> transf = entity->get<Transform3D>();
@@ -79,7 +81,7 @@ void UserScript::tickScript(float deltaTime) {
 
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
-		moveCam = false;
+		game->pause = true;
 	}
 	
 
@@ -124,7 +126,7 @@ void UserScript::tickScript(float deltaTime) {
 
 
 	// Handles mouse inputs
-	if (moveCam)
+	if (!game->pause)
 	{
 		// Hides mouse cursor
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
@@ -173,7 +175,7 @@ void UserScript::tickScript(float deltaTime) {
 	}
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
 		//cout << "SHOOT" << endl;
-		moveCam = true;
+		game->pause = false;
 	}
 
 	

@@ -19,5 +19,6 @@ private:
     float t = 0.;
     int counter = 0;
     bool firstClick = true;
+    bool firstSpawn = true;
 
 };

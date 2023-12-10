@@ -5,6 +5,9 @@ void BulletScript::startScript() {
 }
 
 void BulletScript::tickScript(float deltaTime) {
+	ComponentHandle<GameController> game;
+	world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {game = gameController; });
+	if (game->pause) return;
 	world->each<BulletComponent>([&](Entity* ent, ComponentHandle<BulletComponent> bullet) {
 		ComponentHandle<Transform3D> transform = ent->get<Transform3D>();
 		float renderDistance = 5000;
@@ -68,8 +71,8 @@ void BulletScript::CheckCollisions(Entity* entity) {
 		if (collisionX && collisionY && collisionZ) {
 			// Collision happened, you can handle it here
 			cout << "COLLISION!!!!!!!!!!!" << endl;
+			ent->get<EnemyComponent>()->destroyed = true;
 			ent->getWorld()->destroy(entity);
-			ent->getWorld()->destroy(ent);
 			col = true;
 		}
 		});
