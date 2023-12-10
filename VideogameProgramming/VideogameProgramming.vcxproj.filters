@@ -134,6 +134,9 @@
     <None Include="bullet.vert">
       <Filter>Archivos de recursos\Shaders</Filter>
     </None>
+    <None Include="user.frag">
+      <Filter>Archivos de recursos\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">

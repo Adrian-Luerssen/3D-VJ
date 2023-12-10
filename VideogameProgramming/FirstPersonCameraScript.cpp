@@ -26,7 +26,21 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
+		world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> user) {
+			user->thrust += deltaTime / 200.0f;
+			if (user->thrust > 1) {
+				user->thrust = 1;
+			}
+			});
 		desiredPosition += speedDelta * cam->orientation;
+	}
+	else {
+		world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> user) {
+			user->thrust -= deltaTime / 200.0f;
+			if (user->thrust < 0) {
+				user->thrust = 0;
+			}
+			});
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
@@ -160,13 +174,14 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 		glm::mat4 m = glm::mat4(1.0f);
 
 		m = glm::rotate(m, glm::radians(-rotX), glm::normalize(glm::cross(cam->orientation, cam->up)));
+		
 
 		// Rotates the Orientation left and right
 		glm::mat4 m2 = glm::mat4(1.0f);
 
 		m2 = glm::rotate(m2, glm::radians(-rotY), cam->up);
-
 		cam->orientation = m * m2 * glm::vec4(cam->orientation, 1.);
+		
 		
 
 		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
@@ -186,9 +201,28 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 
 	world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> user) {
 		/*
-		APPLY ROTATION FROM CAMERA TO USER COMPONENT
+		APPLY ROTATION AND POSITION FROM CAMERA TO USER COMPONENT
 		*/
+
+		// Get the forward vector based on camera orientation
+		glm::vec3 forwardVector = glm::normalize(cam->orientation);
+
+		// Set the position of the object in front of the camera
+		ent->get<Transform3D>()->position = cam->position + (200.0f * forwardVector) + glm::vec3(0, -40, 0);
+
+		// Calculate the rotation angles to align the object with the camera's forward direction
+		glm::vec3 rotationAngles;
+		rotationAngles.x = glm::degrees(std::asin(forwardVector.y)); // Pitch
+		rotationAngles.y = glm::degrees(std::atan2(forwardVector.x, forwardVector.z)); // Yaw
+		rotationAngles.z = 0.0f; // No roll since we want the object to face forward
+
+		// Set the rotation angles to the object's rotation
+		ent->get<Transform3D>()->rotation = rotationAngles;
 		});
+
+
+
+
 
 
 

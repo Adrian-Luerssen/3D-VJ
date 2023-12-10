@@ -25,6 +25,7 @@ void SpawnerScript::tickScript(float deltaTime)
 					world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> user) {
 						userPos = ent->get<Transform3D>()->position;
 						objRot = ent->get<Transform3D>()->rotation;
+						
 						float pitch = glm::radians(objRot.x);
 						float yaw = glm::radians(objRot.y);
 						float roll = glm::radians(objRot.z);

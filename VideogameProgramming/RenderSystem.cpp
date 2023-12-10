@@ -53,7 +53,8 @@ void RenderSystem::tick(World* world, float deltaTime)
             Texture roughTexture = textureManager.GetTexture(meshComp->roughnessFilepath);
             Texture metallicTexture = textureManager.GetTexture(meshComp->metallicFilepath);
             Texture emissiveTexture = textureManager.GetTexture(meshComp->emissiveFilepath);
-            rend.DrawMesh(mesh, texture, proj, transform->position, transform->scale, transform->rotation, cam.get(), normalsTexture, roughTexture,metallicTexture,emissiveTexture,far, meshComp->shaderName);
+            user->ticks += deltaTime/200.0f;
+            rend.DrawMesh(mesh, texture, proj, transform->position, transform->scale, transform->rotation, cam.get(), normalsTexture, roughTexture,metallicTexture,emissiveTexture,far,user->thrust, meshComp->shaderName);
         }
         
         

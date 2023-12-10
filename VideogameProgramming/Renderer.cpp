@@ -116,10 +116,10 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 proj = glm::mat4(1.0f);
 
+    model = glm::translate(model, glm::vec3(position));
     model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(0.1f, 0.0f, 0.0f));
     model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 0.1f, 0.0f));
     model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 0.1f));
-    model = glm::translate(model, glm::vec3(position));
     model = glm::scale(model, glm::vec3(scale, scale, scale));
 
     view = glm::lookAt(cam.position, cam.position + cam.orientation, cam.up);
@@ -144,7 +144,7 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
     mesh.VAO.Unbind();
 }
 
-void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm::vec3 position, float scale, glm::vec3 rotation, Camera cam, Texture& normalsTexture, Texture& rough, Texture& metallic, Texture& emissive, float far,
+void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm::vec3 position, float scale, glm::vec3 rotation, Camera cam, Texture& normalsTexture, Texture& rough, Texture& metallic, Texture& emissive, float far, float time,
     string shaderName)
 {
 
@@ -163,10 +163,11 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 proj = glm::mat4(1.0f);
 
+    model = glm::translate(model, glm::vec3(position));
     model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(0.1f, 0.0f, 0.0f));
     model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 0.1f, 0.0f));
     model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 0.1f));
-    model = glm::translate(model, glm::vec3(position));
+    
     model = glm::scale(model, glm::vec3(scale, scale, scale));
 
     view = glm::lookAt(cam.position, cam.position + cam.orientation, cam.up);
@@ -175,6 +176,7 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
     shader->SetMatrix4("model", model);
     shader->SetMatrix4("view", view);
     shader->SetMatrix4("proj", proj);
+    shader->SetFloat("time", time);
     if (shaderName == "bullet") {
         shader->SetBoolean("applyBlur", true);
     }

@@ -136,6 +136,8 @@ struct UserComponent
     bool hit = false;
     bool destroyed = false;
     int shipSpeed = 0;
+    float ticks = 0;
+    float thrust = 0;
 };
 
 struct EnemyComponent

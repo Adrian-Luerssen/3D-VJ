@@ -15,34 +15,39 @@ uniform sampler2D texEmissive;
 uniform vec3 tint = vec3(1.0, 1.0, 1.0);
 uniform vec3 lightDirection = vec3(-0.5, -1, 0.0);
 
+uniform float time; // Add a time uniform for animation
+
 void main()
 {
     vec4 texColor = texture(tex0, uvs);
+
+    // Sample the normal map and transform it to world space
     vec3 normalMap = (texture(texNormals, uvs).rgb * 2.0f) - 1.0f;
     normalMap = normalize(TBN * normalMap);
 
+    // Sample the roughness map
+    float roughnessValue = texture(texRough, uvs).r;
+
+    // Sample the metallic map
+    float metallicValue = texture(texMetallic, uvs).r;
+
+    // Sample the emissive map
+    vec3 emissiveColor = texture(texEmissive, uvs).rgb;
+
+    // Calculate the specular reflection based on the roughness and metallic values
     float dotProduct = 1.0 - (dot(normalize(lightDirection), normalize(normalMap)) + 1.0) / 2.0;
     dotProduct = clamp(dotProduct, 0.0, 1.0);
 
+    // Modulate the specular reflection based on the roughness and metallic values
+    dotProduct *= (1.0 - roughnessValue) * (1.0 - metallicValue);
+
     vec4 directionalLight = vec4(dotProduct, dotProduct, dotProduct, 1.0);
-    
-    // Apply roughness and metallic factors
-    float roughness = texture(texRough, uvs).r;
-    float metallic = texture(texMetallic, uvs).r;
 
-    vec3 specularColor = mix(vec3(0.04), texColor.rgb, metallic);
-    vec3 reflectedLight = normalize(reflect(lightDirection, normalMap));
-    float specularIntensity = pow(max(dot(reflectedLight, normalize(vec3(0, 0, 1))), 0.0), 4.0);
-    vec3 specular = specularIntensity * specularColor;
+    // Add pulsing effect to emissive color using sine function
+    //vec3 pulsingEmissive = emissiveColor * (0.5 + 0.5 * sin(time));
+    vec3 pulsingEmissive = emissiveColor * time;
+    // Combine the emissive color with the final result
 
-    // Apply emissive texture
-    vec3 emissive = texture(texEmissive, uvs).rgb;
-
-    // Combine diffuse, specular, and emissive
-    vec3 finalColor = texColor.rgb * directionalLight.rgb * (1.0 - metallic) + specular + emissive;
-
-    // Apply tint
-    finalColor *= tint;
-
-    FragColor = vec4(finalColor, texColor.a);
+    // Apply the color tint to the final result
+    FragColor = texColor * vec4(tint, 1.0) * directionalLight + vec4(pulsingEmissive, 1.0);
 }
