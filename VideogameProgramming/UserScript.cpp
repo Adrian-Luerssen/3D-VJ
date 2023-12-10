@@ -26,16 +26,20 @@ void UserScript::tickScript(float deltaTime) {
 	glm::vec3 currentEye = transf->position;
 	glm::vec3 desiredEye = transf->position;
 
-	// Assuming transf->rotation is in radians
+	/*glm::mat4 rotationMatrix =
+		glm::rotate(glm::mat4(1.0f), glm::radians(transf->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f)) *
+		glm::rotate(glm::mat4(1.0f), glm::radians(transf->rotation.x), glm::vec3(1.0f, 0.0f, 0.0f)) *
+		glm::rotate(glm::mat4(1.0f), glm::radians(transf->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));*/
 	glm::mat4 rotationMatrix =
 		glm::rotate(glm::mat4(1.0f), transf->rotation.y, glm::vec3(0.0f, 1.0f, 0.0f)) *
 		glm::rotate(glm::mat4(1.0f), transf->rotation.x, glm::vec3(1.0f, 0.0f, 0.0f)) *
 		glm::rotate(glm::mat4(1.0f), transf->rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
-	glm::vec3 forward = glm::vec3(rotationMatrix * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f));
-	glm::vec3 right = glm::vec3(rotationMatrix * glm::vec4(1.0f, 0.0f, 0.0f, 0.0f));
+	glm::vec3 forward = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f)));
+	glm::vec3 right = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(1.0f, 0.0f, 0.0f, 0.0f)));
+	glm::vec3 up = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f)));
 
-	/*if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		desiredEye -= speedDelta * forward;
 	}
@@ -50,9 +54,13 @@ void UserScript::tickScript(float deltaTime) {
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
 		desiredEye -= speedDelta * right;
-	}*/
+	}
 
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	// Set the camera's up vector to the object's up vector
+	cam->up = up;
+
+
+	/*if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		desiredEye += speedDelta * cam->front;
 	}
@@ -67,7 +75,7 @@ void UserScript::tickScript(float deltaTime) {
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
 		desiredEye += speedDelta * glm::normalize(glm::cross(cam->front, cam->up));
-	}
+	}*/
 
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
@@ -121,7 +129,7 @@ void UserScript::tickScript(float deltaTime) {
 		// Hides mouse cursor
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
-		// Prevents userera from jumping on the first click
+		// Prevents user from jumping on the first click
 		if (firstClick)
 		{
 			glfwSetCursorPos(window, (width / 2), (height / 2));
@@ -139,40 +147,20 @@ void UserScript::tickScript(float deltaTime) {
 		float rotX = sensitivity * (float)(mouseY - (height / 2)) / height;
 		float rotY = sensitivity * (float)(mouseX - (width / 2)) / width;
 
-		/*// Calculates upcoming vertical change in the Orientation
-		glm::mat4 m = glm::mat4(1.0f);
-
-		m = glm::rotate(m, glm::radians(-rotX), glm::normalize(glm::cross(user->front, user->up)));
-
-		// Rotates the Orientation left and right
-		glm::mat4 m2 = glm::mat4(1.0f);
-
-		m2 = glm::rotate(m2, glm::radians(-rotY), user->up);
-
-		user->front = m * m2 * glm::vec4(user->front, 1.);*/
-		// Calculates the rotation matrix based on mouse input
+		// Update rotation angles
 		user->ayaw += rotY;
 		user->apitch -= rotX;
-		/**/if (user->apitch > 89.0f)
-			user->apitch = 89.0f;	// doesnt allow the user to over rotate
+
+		// Clamp pitch to avoid over-rotation
+		if (user->apitch > 89.0f)
+			user->apitch = 89.0f;
 		if (user->apitch < -89.0f)
 			user->apitch = -89.0f;
-		if (user->ayaw > 180.0f)
-			user->ayaw = user->ayaw;	// doesnt allow the user to over rotate
-		if (user->ayaw < -179.0f)
-			user->ayaw = 180.0f;
-		cout << "CAM YAW " << user->ayaw << endl;
-		cout << "CAM PITCH " << user->apitch << endl;
 
-		transf->rotation.x = user->apitch;
-		transf->rotation.y = user->ayaw;
+		// Update entity's rotation
+		transf->rotation.x = glm::radians(user->apitch);
+		transf->rotation.y = glm::radians(user->ayaw);
 
-		//glm::vec3 direction = glm::vec3(cos(glm::radians(user->ayaw)) * cos(glm::radians(user->apitch)), sin(glm::radians(user->apitch)), sin(glm::radians(user->ayaw)) * cos(glm::radians(user->apitch)));
-		//transf->rotation = normalize(direction);
-
-
-		//cout << "pos: " << transf->rotation.x << ", " << transf->rotation.y << ", " << transf->rotation.z << endl;
-		//transf->rotation = normalize(transf->rotation);
 		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
 		glfwSetCursorPos(window, (width / 2), (height / 2));
 	}
@@ -188,20 +176,20 @@ void UserScript::tickScript(float deltaTime) {
 		moveCam = true;
 	}
 
-	world->each<Camera>([&](Entity* ent, ComponentHandle<Camera> cam) {
-		// Set the camera's target to the object's position
-		cam->target = transf->position;
+	
+	// Set the camera's target to the object's position
+	cam->target = transf->position;
 
-		// Calculate the camera's position based on the object's rotation (pitch and yaw)
-		float distance = 100.0f; // Adjust the distance as needed
-		glm::vec3 offset = glm::vec3(0.0f, 0.0f, distance);
-		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(transf->rotation.y), glm::vec3(0, 1, 0));
-		rotationMatrix = glm::rotate(rotationMatrix, glm::radians(transf->rotation.x), glm::vec3(1, 0, 0));
-		cam->eye = transf->position - glm::vec3(rotationMatrix * glm::vec4(offset, 1.0f));
+	// Calculate the camera's position based on the object's rotation (pitch and yaw)
+	float distance = 100.0f; // Adjust the distance as needed
+	glm::vec3 offset = glm::vec3(0.0f, 0.0f, distance);
+	rotationMatrix = glm::rotate(glm::mat4(1.0f), transf->rotation.y, glm::vec3(0, 1, 0));
+	rotationMatrix = glm::rotate(rotationMatrix, transf->rotation.x, glm::vec3(1, 0, 0));
+	cam->eye = transf->position - glm::vec3(rotationMatrix * glm::vec4(offset, 1.0f));
 
-		// Assuming you want the camera to always face the back of the object
-		cam->front = glm::normalize(transf->position - cam->eye);
-		});
+	// Assuming you want the camera to always face the back of the object
+	cam->front = glm::normalize(transf->position - cam->eye);
+		
 
 
 }
