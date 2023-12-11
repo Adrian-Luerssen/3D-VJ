@@ -55,11 +55,11 @@ void SpawnerScript::tickScript(float deltaTime)
 		t += deltaTime / 2.0f;
 		if (t > delay) {
 			cout << "spawning new asteroid" << endl;
-			/*Entity* ent = world->create();
+			Entity* ent = world->create();
 			ent->assign<Transform3D>(glm::vec3(1000000, 1, 0.), 5);
 			ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide1.obj" , "default", "Textures/asteroids/normal.png");
 			ent->assign<EnemyComponent>(1, counter);
-			ent->assign<CubeCollider>(25, 25, 25);*/
+			ent->assign<CubeCollider>(25, 25, 25);/**/
 			//counter++;
 			t = 0;
 		}

@@ -121,9 +121,9 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
         //cout << rotation.x << ", " << rotation.y << ", " << rotation.z << endl;
     }
     model = glm::translate(model, glm::vec3(position));
-    model = glm::rotate(model, rotation.x, glm::vec3(0.1f, 0.0f, 0.0f)); // Rotate around X axis
-    model = glm::rotate(model, rotation.y, glm::vec3(0.0f, 0.1f, 0.0f)); // Rotate around Y axis
-    model = glm::rotate(model, rotation.z, glm::vec3(0.0f, 0.0f, 0.1f)); // Rotate around Z axis
+
+    glm::quat rotationQuat = glm::quat((rotation));
+    model *= glm::mat4(rotationQuat);
     
     model = glm::scale(model, glm::vec3(scale, scale, scale));
    

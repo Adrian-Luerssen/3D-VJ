@@ -150,8 +150,8 @@ void UserScript::tickScript(float deltaTime) {
 		float rotY = sensitivity * (float)(mouseX - (width / 2)) / width;
 
 		// Update rotation angles
-		user->ayaw += rotY;
-		user->apitch -= rotX;
+		user->ayaw -= rotY;
+		user->apitch += rotX;
 
 		// Clamp pitch to avoid over-rotation
 		if (user->apitch > 89.0f)
