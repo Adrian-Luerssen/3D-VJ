@@ -153,7 +153,7 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
     mesh.VAO.Unbind();
 }
 
-void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm::vec3 position, float scale, glm::vec3 rotation, Camera cam, Texture& normalsTexture, Texture& rough, Texture& metallic, Texture& emissive, float far,
+void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm::vec3 position, float scale, glm::vec3 rotation, Camera cam, Texture& normalsTexture, Texture& rough, Texture& metallic, Texture& emissive, float far, float time,
     string shaderName)
 {
 
@@ -185,6 +185,7 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
     shader->SetMatrix4("model", model);
     shader->SetMatrix4("view", view);
     shader->SetMatrix4("proj", proj);
+    shader->SetFloat("time", time);
     if (shaderName == "bullet") {
         shader->SetBoolean("applyBlur", true);
     }

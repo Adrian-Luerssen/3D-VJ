@@ -180,6 +180,7 @@
     <None Include="skybox.vert" />
     <None Include="unlit.frag" />
     <None Include="unlit.vert" />
+    <None Include="user.frag" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AsteroidScript.h" />

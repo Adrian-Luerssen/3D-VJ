@@ -40,94 +40,78 @@ void UserScript::tickScript(float deltaTime) {
 	glm::vec3 forward = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f)));
 	glm::vec3 right = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(1.0f, 0.0f, 0.0f, 0.0f)));
 	glm::vec3 up = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f)));
-
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-	{
-		desiredEye -= speedDelta * forward;
-	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-	{
-		desiredEye += speedDelta * right;
-	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-	{
-		desiredEye += speedDelta * forward;
-	}
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-	{
-		desiredEye -= speedDelta * right;
-	}
-
-	// Set the camera's up vector to the object's up vector
-	cam->up = up;
-
-
-	/*if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-	{
-		desiredEye += speedDelta * cam->front;
-	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-	{
-		desiredEye += speedDelta * -glm::normalize(glm::cross(cam->front, cam->up));
-	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-	{
-		desiredEye += speedDelta * -cam->front;
-	}
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-	{
-		desiredEye += speedDelta * glm::normalize(glm::cross(cam->front, cam->up));
-	}*/
-
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-	{
-		game->pause = true;
-	}
-	
-
-
-	bool col = false;
-
-	world->each<EnemyComponent>([&](Entity* ent, ComponentHandle<EnemyComponent> enemy) {
-		if (col) return;
-		ComponentHandle<Transform3D> enemyTransform = ent->get<Transform3D>();
-		ComponentHandle<CubeCollider> enemyCollider = ent->get<CubeCollider>();
-
-		// Check for collision along the X-axis
-		bool collisionX = desiredEye.x >= enemyTransform->position.x - enemyCollider->width &&
-			enemyTransform->position.x + enemyCollider->width >= desiredEye.x;
-
-		// Check for collision along the Y-axis
-		bool collisionY = desiredEye.y >= enemyTransform->position.y - enemyCollider->height &&
-			enemyTransform->position.y + enemyCollider->height >= desiredEye.y;
-
-		// Check for collision along the Z-axis
-		bool collisionZ = desiredEye.z >= enemyTransform->position.z - enemyCollider->length &&
-			enemyTransform->position.z + enemyCollider->length >= desiredEye.z;
-
-		// If there is a collision along all axes, then a collision occurred
-		if (collisionX && collisionY && collisionZ) {
-			// Collision happened, you can handle it here
-			cout << "lives --" << endl;
-			ent->getWorld()->destroy(ent);
-			col = true;
-		}
-		});
-
-	//if (desiredEye.y < -5) {
-	//	cout << "fallen out of world" << endl;
-	//	desiredEye.y = 20;
-	//}
-	//user->eye.y = desiredEye.y;
-	//cout << "pos: " << user->eye.x << ", " << user->eye.y << ", " << user->eye.z << endl;
-
-	transf->position = desiredEye;
-	//user->eye.y += eyeLevel;
-
-
-	// Handles mouse inputs
 	if (!game->pause)
 	{
+		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		{
+			desiredEye -= speedDelta * forward;
+			user->thrust += deltaTime / 200.0f;
+			if (user->thrust > 1) {
+				user->thrust = 1;
+			}
+		}
+		else {
+			user->thrust -= deltaTime / 200.0f;
+			if (user->thrust < 0) {
+				user->thrust = 0;
+			}
+		}
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		{
+			desiredEye += speedDelta * right;
+
+		}
+		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		{
+			desiredEye += speedDelta * forward;
+		}
+		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		{
+			desiredEye -= speedDelta * right;
+		}
+		// Set the camera's up vector to the object's up vector
+		cam->up = up;
+
+		bool col = false;
+
+		world->each<EnemyComponent>([&](Entity* ent, ComponentHandle<EnemyComponent> enemy) {
+			if (col) return;
+			ComponentHandle<Transform3D> enemyTransform = ent->get<Transform3D>();
+			ComponentHandle<CubeCollider> enemyCollider = ent->get<CubeCollider>();
+
+			// Check for collision along the X-axis
+			bool collisionX = desiredEye.x >= enemyTransform->position.x - enemyCollider->width &&
+				enemyTransform->position.x + enemyCollider->width >= desiredEye.x;
+
+			// Check for collision along the Y-axis
+			bool collisionY = desiredEye.y >= enemyTransform->position.y - enemyCollider->height &&
+				enemyTransform->position.y + enemyCollider->height >= desiredEye.y;
+
+			// Check for collision along the Z-axis
+			bool collisionZ = desiredEye.z >= enemyTransform->position.z - enemyCollider->length &&
+				enemyTransform->position.z + enemyCollider->length >= desiredEye.z;
+
+			// If there is a collision along all axes, then a collision occurred
+			if (collisionX && collisionY && collisionZ) {
+				// Collision happened, you can handle it here
+				cout << "lives --" << endl;
+				ent->getWorld()->destroy(ent);
+				col = true;
+			}
+			});
+
+		//if (desiredEye.y < -5) {
+		//	cout << "fallen out of world" << endl;
+		//	desiredEye.y = 20;
+		//}
+		//user->eye.y = desiredEye.y;
+		//cout << "pos: " << user->eye.x << ", " << user->eye.y << ", " << user->eye.z << endl;
+
+		transf->position = desiredEye;
+		//user->eye.y += eyeLevel;
+
+
+		// Handles mouse inputs
 		// Hides mouse cursor
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
@@ -165,6 +149,20 @@ void UserScript::tickScript(float deltaTime) {
 
 		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
 		glfwSetCursorPos(window, (width / 2), (height / 2));
+
+		// Set the camera's target to the object's position
+		cam->target = transf->position;
+
+		// Calculate the camera's position based on the object's rotation (pitch and yaw)
+		float distance = 100.0f; // Adjust the distance as needed
+		float heightOffset = 20.0f; // Adjust the height offset as needed
+		glm::vec3 offset = glm::vec3(0.0f, heightOffset, -distance); // Adjust the offset values
+		rotationMatrix = glm::rotate(glm::mat4(1.0f), transf->rotation.y, glm::vec3(0, 1, 0));
+		rotationMatrix = glm::rotate(rotationMatrix, transf->rotation.x, glm::vec3(1, 0, 0));
+		cam->eye = transf->position + glm::vec3(rotationMatrix * glm::vec4(offset, 1.0f));
+
+		// Assuming you want the camera to always face the back of the object
+		cam->front = -forward;
 	}
 	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
 	{
@@ -173,27 +171,19 @@ void UserScript::tickScript(float deltaTime) {
 		// Makes sure the next time the userera looks around it doesn't jump
 		firstClick = true;
 	}
+
+
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		game->pause = true;
+	}
+	
+	
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
 		//cout << "SHOOT" << endl;
 		game->pause = false;
 	}
 
-	
-	// Set the camera's target to the object's position
-	cam->target = transf->position;
-
-	// Calculate the camera's position based on the object's rotation (pitch and yaw)
-	float distance = 100.0f; // Adjust the distance as needed
-	float heightOffset = 20.0f; // Adjust the height offset as needed
-	glm::vec3 offset = glm::vec3(0.0f, heightOffset, -distance); // Adjust the offset values
-	rotationMatrix = glm::rotate(glm::mat4(1.0f), transf->rotation.y, glm::vec3(0, 1, 0));
-	rotationMatrix = glm::rotate(rotationMatrix, transf->rotation.x, glm::vec3(1, 0, 0));
-	cam->eye = transf->position + glm::vec3(rotationMatrix * glm::vec4(offset, 1.0f));
-
-	// Assuming you want the camera to always face the back of the object
-	cam->front = -forward;
-
-		
 
 
 }

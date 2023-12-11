@@ -142,6 +142,8 @@ struct UserComponent
     int shipSpeed = 0;
 
     float apitch, ayaw;
+    float ticks;
+    float thrust;
 };
 
 struct EnemyComponent
