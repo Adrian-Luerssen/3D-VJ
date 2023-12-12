@@ -22,7 +22,9 @@ void UserScript::tickScript(float deltaTime) {
 		});
 	ComponentHandle<GameController> game;
 	world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {game = gameController; });
-
+	if (game->freeCam) {
+		return;
+	}
 	ComponentHandle<UserComponent> user = entity->get<UserComponent>();
 	ComponentHandle<Transform3D> transf = entity->get<Transform3D>();
 	glm::vec3 currentEye = transf->position;
@@ -62,22 +64,7 @@ void UserScript::tickScript(float deltaTime) {
 	cam->up = up;
 
 
-	/*if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-	{
-		desiredEye += speedDelta * cam->front;
-	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-	{
-		desiredEye += speedDelta * -glm::normalize(glm::cross(cam->front, cam->up));
-	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-	{
-		desiredEye += speedDelta * -cam->front;
-	}
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-	{
-		desiredEye += speedDelta * glm::normalize(glm::cross(cam->front, cam->up));
-	}*/
+	
 
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{

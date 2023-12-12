@@ -133,6 +133,8 @@ struct ScriptComponent
 //----------------- My Components --------------------
 struct GameController {
     bool pause = true;
+    bool freeCam = false;
+    int score = 0;
 };
 struct UserComponent
 {

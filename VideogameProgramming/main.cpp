@@ -28,6 +28,7 @@
 #include "AsteroidScript.h"
 #include "BulletScript.h"
 #include "UserScript.h"
+#include "UIScript.h"
 using std::cout; 
 using std::endl;
 using std::chrono::duration_cast;
@@ -131,9 +132,9 @@ void SetupWorld() {
 	ScriptManager* scriptManager = scriptSystem->getScriptManager();
 
 	Entity* ent = CreateCamera(glm::vec3(30.0f, 2.f, 30.0f));
-	//FirstPersonCameraScript* fps = new FirstPersonCameraScript(window, world, ent);
+	FirstPersonCameraScript* fps = new FirstPersonCameraScript(window, world, ent);
 	
-	//ent->assign<ScriptComponent>(scriptManager->AddScript(fps));
+	ent->assign<ScriptComponent>(scriptManager->AddScript(fps));
 
 	rs->setCamera(ent);
 
@@ -145,6 +146,10 @@ void SetupWorld() {
 	Entity* bulletManager = CreateEntity3DEmpty();
 	BulletScript* bulletScript = new BulletScript(window, world, bulletManager);
 	bulletManager->assign<ScriptComponent>(scriptManager->AddScript(bulletScript));
+
+	Entity* uiManager = CreateEntity3DEmpty();
+	UIScript* uiScript = new UIScript(window, world, uiManager);
+	uiManager->assign<ScriptComponent>(scriptManager->AddScript(uiScript));
 
 	Entity* asteroidManager = CreateEntity3DEmpty();
 	AsteroidScript* asteroidScript = new AsteroidScript(window, world, asteroidManager);
@@ -164,11 +169,10 @@ void SetupWorld() {
 
 	
 
-	Entity* sprite = CreateEntity2D(glm::vec2(100., 100.), 0.f, 10.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
+	Entity* sprite = CreateEntity2D(glm::vec2(100., 100.), 0.f, 100.f, "Textures/text/score_text.png", glm::vec3(1., 1., 1.));
 
 	Entity* sprite2 = CreateEntity2D(glm::vec2(250., 100.), 0.f, 1.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
 
-	Entity* sprite3 = CreateEntity2D(glm::vec2(100., 250.), 0.f, 1.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
 
 	Entity* obj1 = CreateEntity3DWithMesh(glm::vec3(0., 1.5, 0.),1, "Meshes/spaceship.obj", "Textures/spaceship/color.png", "Textures/spaceship/normal.png");
 	obj1->assign<UserComponent>();

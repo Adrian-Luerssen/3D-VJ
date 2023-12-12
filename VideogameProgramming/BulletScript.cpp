@@ -71,6 +71,7 @@ void BulletScript::CheckCollisions(Entity* entity) {
 		if (collisionX && collisionY && collisionZ) {
 			// Collision happened, you can handle it here
 			cout << "COLLISION!!!!!!!!!!!" << endl;
+			world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> game) {game->score += enemy->points; });
 			ent->get<EnemyComponent>()->destroyed = true;
 			ent->getWorld()->destroy(entity);
 			col = true;
