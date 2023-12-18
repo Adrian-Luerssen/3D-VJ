@@ -22,7 +22,9 @@ void UserScript::tickScript(float deltaTime) {
 		});
 	ComponentHandle<GameController> game;
 	world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {game = gameController; });
-
+	if (game->freeCam) {
+		return;
+	}
 	ComponentHandle<UserComponent> user = entity->get<UserComponent>();
 	ComponentHandle<Transform3D> transf = entity->get<Transform3D>();
 	glm::vec3 currentEye = transf->position;
@@ -177,8 +179,8 @@ void UserScript::tickScript(float deltaTime) {
 	{
 		game->pause = true;
 	}
-	
-	
+
+
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
 		//cout << "SHOOT" << endl;
 		game->pause = false;

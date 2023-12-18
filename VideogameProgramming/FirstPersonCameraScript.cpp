@@ -6,7 +6,8 @@ void FirstPersonCameraScript::startScript() {
 }
 
 void FirstPersonCameraScript::tickScript(float deltaTime) {
-	/*if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 	{
 		speed = 0.2f;
 	}
@@ -19,31 +20,34 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 	float height = 800;
 
 	ComponentHandle<Camera> cam = entity->get<Camera>();
-	glm::vec3 currentPosition = cam->position;
-	glm::vec3 desiredPosition = cam->position;
+	glm::vec3 currentPosition = cam->eye;
+	glm::vec3 desiredPosition = cam->eye;
 	ComponentHandle<GameController> game;
 	world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {game = gameController; });
+	if (!game->freeCam) {
+		return;
+	}
 
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		desiredPosition += speedDelta * cam->orientation;
+		desiredPosition += speedDelta * cam->front;
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		desiredPosition += speedDelta * -glm::normalize(glm::cross(cam->orientation, cam->up));
+		desiredPosition += speedDelta * -glm::normalize(glm::cross(cam->front, cam->up));
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		desiredPosition += speedDelta * -cam->orientation;
+		desiredPosition += speedDelta * -cam->front;
 	}
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		desiredPosition += speedDelta * glm::normalize(glm::cross(cam->orientation, cam->up));
+		desiredPosition += speedDelta * glm::normalize(glm::cross(cam->front, cam->up));
 	}
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		game->pause = true;
-	}*/
+	}
 
 	/*if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !jump && landed)
 	{
@@ -60,7 +64,7 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 		desiredPosition += speedDelta * -cam->up;
 	}
 	timeSinceJump += deltaTime / 60.0f;
-	
+
 	if (jump) {
 		landed = false;
 		float dif = -0.2f * (pow((timeSinceJump - 2), 2)) + 1;
@@ -93,20 +97,20 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 		}
 
 	}*/
-	/*bool col = false;
-	
+	bool col = false;
+
 	world->each<EnemyComponent>([&](Entity* ent, ComponentHandle<EnemyComponent> enemy) {
 		if (col) return;
 		ComponentHandle<Transform3D> enemyTransform = ent->get<Transform3D>();
 		ComponentHandle<CubeCollider> enemyCollider = ent->get<CubeCollider>();
 
 		// Check for collision along the X-axis
-		bool collisionX = desiredPosition.x  >= enemyTransform->position.x - enemyCollider->width &&
+		bool collisionX = desiredPosition.x >= enemyTransform->position.x - enemyCollider->width &&
 			enemyTransform->position.x + enemyCollider->width >= desiredPosition.x;
 
 		// Check for collision along the Y-axis
 		bool collisionY = desiredPosition.y >= enemyTransform->position.y - enemyCollider->height &&
-			enemyTransform->position.y + enemyCollider->height >= desiredPosition.y ;
+			enemyTransform->position.y + enemyCollider->height >= desiredPosition.y;
 
 		// Check for collision along the Z-axis
 		bool collisionZ = desiredPosition.z >= enemyTransform->position.z - enemyCollider->length &&
@@ -128,7 +132,7 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 	//cam->position.y = desiredPosition.y;
 	//cout << "pos: " << cam->position.x << ", " << cam->position.y << ", " << cam->position.z << endl;
 
-	cam->position = desiredPosition;
+	cam->eye = desiredPosition;
 	//cam->position.y += eyeLevel;
 
 
@@ -159,15 +163,15 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 		// Calculates upcoming vertical change in the Orientation
 		glm::mat4 m = glm::mat4(1.0f);
 
-		m = glm::rotate(m, glm::radians(-rotX), glm::normalize(glm::cross(cam->orientation, cam->up)));
+		m = glm::rotate(m, glm::radians(-rotX), glm::normalize(glm::cross(cam->front, cam->up)));
 
 		// Rotates the Orientation left and right
 		glm::mat4 m2 = glm::mat4(1.0f);
 
 		m2 = glm::rotate(m2, glm::radians(-rotY), cam->up);
 
-		cam->orientation = m * m2 * glm::vec4(cam->orientation, 1.);
-		
+		cam->front = m * m2 * glm::vec4(cam->front, 1.);
+
 
 		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
 		glfwSetCursorPos(window, (width / 2), (height / 2));
@@ -184,13 +188,8 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 		game->pause = false;
 	}
 
-	world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> user) {
-		
-		APPLY ROTATION FROM CAMERA TO USER COMPONENT
-		
-		});
+	cam->target = cam->eye;
 
-*/
 
 
 

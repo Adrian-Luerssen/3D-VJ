@@ -31,7 +31,7 @@ struct Transform3D
 
 struct Camera
 {
-    Camera(glm::vec3 eye, glm::vec3 front, glm::vec3 up, float renderDistance =2000.0f) {
+    Camera(glm::vec3 eye, glm::vec3 front, glm::vec3 up, float renderDistance = 2000.0f) {
         this->eye = eye;
         this->front = front;
         this->up = up;
@@ -133,6 +133,8 @@ struct ScriptComponent
 //----------------- My Components --------------------
 struct GameController {
     bool pause = true;
+    bool freeCam = false;
+    int score = 0;
 };
 struct UserComponent
 {
@@ -163,17 +165,17 @@ struct EnemyComponent
 struct BulletComponent
 {
     BulletComponent(glm::vec3 pos, glm::vec3 dir) {
-        this->pos=pos;
-        this->dir=dir;
+        this->pos = pos;
+        this->dir = dir;
     }
- 
+
     glm::vec3 pos;
     glm::vec3 dir;
 
 };
 
 struct TemporaryComponent {
-    TemporaryComponent(glm::vec3 dir,float duration) {
+    TemporaryComponent(glm::vec3 dir, float duration) {
         this->dir = dir;
         this->duration = duration;
     }

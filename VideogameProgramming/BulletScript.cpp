@@ -34,16 +34,16 @@ void BulletScript::tickScript(float deltaTime) {
 		//cout << "tick ball" << endl;
 		//cout << "pos: " << transform->position.x << ", " << transform->position.y << endl;
 
-		transform->position -= bullet->dir *deltaTime / 3.0f;
-		
+		transform->position -= bullet->dir * deltaTime / 3.0f;
+
 
 		// Calculate the rotation angles needed to align the object with the camera direction
-		
-		});
-	
-	
 
-	
+		});
+
+
+
+
 }
 
 void BulletScript::CheckCollisions(Entity* entity) {
@@ -71,6 +71,7 @@ void BulletScript::CheckCollisions(Entity* entity) {
 		if (collisionX && collisionY && collisionZ) {
 			// Collision happened, you can handle it here
 			cout << "COLLISION!!!!!!!!!!!" << endl;
+			world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> game) {game->score += enemy->points; });
 			ent->get<EnemyComponent>()->destroyed = true;
 			ent->getWorld()->destroy(entity);
 			col = true;
@@ -79,7 +80,7 @@ void BulletScript::CheckCollisions(Entity* entity) {
 
 
 
-	
+
 
 }
 
@@ -103,7 +104,7 @@ void EnemyBulletScript::tickScript(float deltaTime) {
 		transform->position.y = BulletScript::idlePos;
 		collider->collidedWith = false;
 	}
-	
+
 	if (bullet->shot) {
 		entity->get<SoundComponent>()->playSound = true;
 		ComponentHandle<BulletComponent> bullet = entity->get<BulletComponent>();
@@ -130,7 +131,7 @@ void EnemyBulletScript::tickScript(float deltaTime) {
 		return;
 	}
 
-	
+
 		ticksSinceFired += deltaTime / 5.5f;
 		if (ticksSinceFired >= 0 && ticksSinceFired < 10) {
 			sprite->filepath = bullet->frame1;
@@ -152,7 +153,7 @@ void EnemyBulletScript::tickScript(float deltaTime) {
 			}
 		}
 
-	
+
 
 	// cout << "tick ball" << endl;
 	// cout << "pos: " << transform->position.x << ", " << transform->position.y << endl;

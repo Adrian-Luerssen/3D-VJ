@@ -28,7 +28,8 @@
 #include "AsteroidScript.h"
 #include "BulletScript.h"
 #include "UserScript.h"
-using std::cout; 
+#include "UIScript.h"
+using std::cout;
 using std::endl;
 using std::chrono::duration_cast;
 using std::chrono::milliseconds;
@@ -81,7 +82,7 @@ bool SetupWindow() {
 	return true;
 }
 
-Entity* CreateEntity2D(glm::vec2 position, float rotation, float scale, const char* filepath, glm::vec3 color, 
+Entity* CreateEntity2D(glm::vec2 position, float rotation, float scale, const char* filepath, glm::vec3 color,
 	bool autoSize = true, glm::vec2 size = glm::vec2(1.0, 1.0), const char* shaderName = "inverted") {
 	Entity* ent = world->create();
 	ent->assign<Transform2D>(position, rotation, scale);
@@ -131,9 +132,9 @@ void SetupWorld() {
 	ScriptManager* scriptManager = scriptSystem->getScriptManager();
 
 	Entity* ent = CreateCamera(glm::vec3(30.0f, 2.f, 30.0f));
-	//FirstPersonCameraScript* fps = new FirstPersonCameraScript(window, world, ent);
-	
-	//ent->assign<ScriptComponent>(scriptManager->AddScript(fps));
+	FirstPersonCameraScript* fps = new FirstPersonCameraScript(window, world, ent);
+
+	ent->assign<ScriptComponent>(scriptManager->AddScript(fps));
 
 	rs->setCamera(ent);
 
@@ -145,6 +146,10 @@ void SetupWorld() {
 	Entity* bulletManager = CreateEntity3DEmpty();
 	BulletScript* bulletScript = new BulletScript(window, world, bulletManager);
 	bulletManager->assign<ScriptComponent>(scriptManager->AddScript(bulletScript));
+
+	Entity* uiManager = CreateEntity3DEmpty();
+	UIScript* uiScript = new UIScript(window, world, uiManager);
+	uiManager->assign<ScriptComponent>(scriptManager->AddScript(uiScript));
 
 	Entity* asteroidManager = CreateEntity3DEmpty();
 	AsteroidScript* asteroidScript = new AsteroidScript(window, world, asteroidManager);
@@ -162,15 +167,14 @@ void SetupWorld() {
 	//wall->assign<CubeCollider>(2.1, 2.1, 2.1);
 	//wall->assign<UserComponent>();
 
-	
 
-	Entity* sprite = CreateEntity2D(glm::vec2(100., 100.), 0.f, 10.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
+
+	Entity* sprite = CreateEntity2D(glm::vec2(100., 100.), 0.f, 100.f, "Textures/text/score_text.png", glm::vec3(1., 1., 1.));
 
 	Entity* sprite2 = CreateEntity2D(glm::vec2(250., 100.), 0.f, 1.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
 
-	Entity* sprite3 = CreateEntity2D(glm::vec2(100., 250.), 0.f, 1.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
 
-	Entity* obj1 = CreateEntity3DWithMesh(glm::vec3(0., 1.5, 0.),1, "Meshes/spaceship.obj", "Textures/spaceship/color.png", "Textures/spaceship/normal.png");
+	Entity* obj1 = CreateEntity3DWithMesh(glm::vec3(0., 1.5, 0.), 1, "Meshes/spaceship.obj", "Textures/spaceship/color.png", "Textures/spaceship/normal.png");
 	obj1->assign<UserComponent>();
 	obj1->get<MeshComponent>()->roughnessFilepath = "Textures/spaceship/roughness.png";
 	obj1->get<MeshComponent>()->metallicFilepath = "Textures/spaceship/metallic.png";
@@ -188,8 +192,8 @@ void SetupWorld() {
 		//AsteroidScript* asteroid_script = new AsteroidScript(window, world, asteroid1);
 		//asteroid1->assign<ScriptComponent>(scriptManager->AddScript(asteroid_script));
 	}*/
-	
-	
+
+
 	/*Entity* asteroid2 = CreateEntity3DWithMesh(glm::vec3(10., 1, 0.), 0.5, "Meshes/asteroids/asteroide2.obj", "Textures/asteroids/color.png", "Textures/asteroids/normal.png");
 	Entity* asteroid3 = CreateEntity3DWithMesh(glm::vec3(10., 1, 0.), 0.5, "Meshes/asteroids/asteroide3.obj", "Textures/asteroids/color.png", "Textures/asteroids/normal.png");
 	Entity* asteroid4 = CreateEntity3DWithMesh(glm::vec3(10., 1, 0.), 0.5, "Meshes/asteroids/asteroide4.obj", "Textures/asteroids/color.png", "Textures/asteroids/normal.png");
@@ -201,11 +205,11 @@ void SetupWorld() {
 	Entity* asteroid10 = CreateEntity3DWithMesh(glm::vec3(10., 1, 0.), 0.5, "Meshes/asteroids/asteroide10.obj", "Textures/asteroids/color.png", "Textures/asteroids/normal.png");*/
 
 	//Entity* obj5 = CreateEntity3DWithMesh(glm::vec3(-10., 2., 0.), 1, "Meshes/cube.obj", "Textures/perlin_noise.png", "Textures/sand/Sand_norm.png");
-	
+
 }
 
 int main() {
-	
+
 	SetupGLFW();
 
 	if (!SetupWindow()) {
