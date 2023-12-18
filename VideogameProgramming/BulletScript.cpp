@@ -34,7 +34,7 @@ void BulletScript::tickScript(float deltaTime) {
 		//cout << "tick ball" << endl;
 		//cout << "pos: " << transform->position.x << ", " << transform->position.y << endl;
 
-		transform->position -= bullet->dir * deltaTime / 3.0f;
+		transform->position -= bullet->dir * deltaTime / this->speed;
 
 
 		// Calculate the rotation angles needed to align the object with the camera direction

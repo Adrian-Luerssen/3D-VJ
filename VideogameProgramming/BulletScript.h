@@ -21,7 +21,7 @@ public:
 
 private:
     virtual void CheckCollisions(Entity* entity);
-
+    float speed = 1.5f;
 
 
 };

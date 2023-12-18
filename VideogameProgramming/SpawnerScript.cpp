@@ -11,11 +11,12 @@ void SpawnerScript::tickScript(float deltaTime)
 	if (game->pause) {
 		firstSpawn = true;
 		return;
-	}else{
+	}
+	else {
 
 		// spawn bullets on mouse click
 		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-			if (!firstSpawn){
+			if (!firstSpawn) {
 				if (firstClick) {
 					firstClick = false;
 					t = 0;
@@ -36,17 +37,42 @@ void SpawnerScript::tickScript(float deltaTime)
 						});
 
 					//userLookAt = -userLookAt;
-					cout << "spawned at " << userPos.x << "," << userPos.y << "," << userPos.z << endl;
-					Entity* ent = world->create();
-					ent->assign<Transform3D>(userPos, 5, objRot);
-					ent->assign<MeshComponent>("Textures/flat_normal.png", "Meshes/cube.obj", "bullet");
-					ent->assign<BulletComponent>(userPos, userLookAt);
-					ent->assign<CubeCollider>(2, 2, 2);
+					// Assuming userPos is the ship's position, and userLookAt is the ship's facing direction
+
+// Calculate the offset distance for each side
+					float offset = 3.0f;  // Adjust this value based on your requirements
+
+					// Calculate the offset vectors for both sides
+					glm::vec3 offsetLeft = glm::normalize(glm::cross(userLookAt, glm::vec3(0, 1, 0))) * offset;
+					glm::vec3 offsetRight = -offsetLeft;  // Opposite direction for the right side
+
+					// Calculate the spawn positions for both bullets
+					glm::vec3 bulletSpawnPosLeft = userPos + offsetLeft;
+					glm::vec3 bulletSpawnPosRight = userPos + offsetRight;
+
+					cout << "Left bullet spawned at " << bulletSpawnPosLeft.x << "," << bulletSpawnPosLeft.y << "," << bulletSpawnPosLeft.z << endl;
+					cout << "Right bullet spawned at " << bulletSpawnPosRight.x << "," << bulletSpawnPosRight.y << "," << bulletSpawnPosRight.z << endl;
+
+					// Spawn left bullet
+					Entity* entLeft = world->create();
+					entLeft->assign<Transform3D>(bulletSpawnPosLeft, 5, objRot);
+					entLeft->assign<MeshComponent>("Textures/flat_normal.png", "Meshes/bullet.obj", "bullet");
+					entLeft->assign<BulletComponent>(bulletSpawnPosLeft, userLookAt);
+					entLeft->assign<CubeCollider>(2, 2, 2);
+
+					// Spawn right bullet
+					Entity* entRight = world->create();
+					entRight->assign<Transform3D>(bulletSpawnPosRight, 5, objRot);
+					entRight->assign<MeshComponent>("Textures/flat_normal.png", "Meshes/bullet.obj", "bullet");
+					entRight->assign<BulletComponent>(bulletSpawnPosRight, userLookAt);
+					entRight->assign<CubeCollider>(2, 2, 2);
+
+
 				}
 			}
-			
+
 		}
-		else  {
+		else {
 			firstClick = true;
 			if (firstSpawn) {
 				firstSpawn = false;
@@ -54,15 +80,47 @@ void SpawnerScript::tickScript(float deltaTime)
 		}
 		t += deltaTime / 2.0f;
 		if (t > delay) {
-			cout << "spawning new asteroid" << endl;
 			Entity* ent = world->create();
 			ent->assign<Transform3D>(glm::vec3(1000000, 1, 0.), 5);
-			ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide1.obj" , "default", "Textures/asteroids/normal.png");
+			int random = rand() % 10 + 1;
+			cout << "spawning new asteroid type "<< random << endl;
+			switch (random) {
+			case 1:
+				ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide1.obj", "default", "Textures/asteroids/normal.png");
+				break;
+			case 2:
+				ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide2.obj", "default", "Textures/asteroids/normal.png");
+				break;
+			case 3:
+				ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide3.obj", "default", "Textures/asteroids/normal.png");
+				break;
+			case 4:
+				ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide4.obj", "default", "Textures/asteroids/normal.png");
+				break;
+			case 5:
+				ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide5.obj", "default", "Textures/asteroids/normal.png");
+				break;
+			case 6:
+				ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide6.obj", "default", "Textures/asteroids/normal.png");
+				break;
+			case 7:
+				ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide7.obj", "default", "Textures/asteroids/normal.png");
+				break;
+			case 8:
+				ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide8.obj", "default", "Textures/asteroids/normal.png");
+				break;
+			case 9:
+				ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide9.obj", "default", "Textures/asteroids/normal.png");
+				break;
+			case 10:
+				ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide10.obj", "default", "Textures/asteroids/normal.png");
+				break;
+			}
 			ent->assign<EnemyComponent>(1, counter);
 			ent->assign<CubeCollider>(25, 25, 25);/**/
 			//counter++;
 			t = 0;
 		}
-		
+
 	}
 }
