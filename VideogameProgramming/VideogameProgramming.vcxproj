@@ -208,16 +208,6 @@
     <ClInclude Include="VBO.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Textures\background_brown.png" />
-    <Image Include="Textures\ball_blue_small.png" />
-    <Image Include="Textures\button_blue.png" />
-    <Image Include="Textures\button_yellow.png" />
-    <Image Include="Textures\cyborgFemaleA.png" />
-    <Image Include="Textures\science_dog.png" />
-    <Image Include="Textures\skybox.png" />
-    <Image Include="Textures\skybox2.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Object Include="Meshes\boat_large.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -260,6 +250,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Textures\flat_normal.png" />
+    <Image Include="Textures\perlin_noise.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

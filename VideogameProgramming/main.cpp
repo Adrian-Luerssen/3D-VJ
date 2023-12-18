@@ -83,7 +83,7 @@ bool SetupWindow() {
 }
 
 Entity* CreateEntity2D(glm::vec2 position, float rotation, float scale, const char* filepath, glm::vec3 color,
-	bool autoSize = true, glm::vec2 size = glm::vec2(1.0, 1.0), const char* shaderName = "inverted") {
+	bool autoSize = true, glm::vec2 size = glm::vec2(1.0, 1.0), const char* shaderName = "unlit") {
 	Entity* ent = world->create();
 	ent->assign<Transform2D>(position, rotation, scale);
 	ent->assign<Sprite>(filepath, color, autoSize, size, shaderName);
@@ -169,9 +169,10 @@ void SetupWorld() {
 
 
 
-	Entity* sprite = CreateEntity2D(glm::vec2(100., 100.), 0.f, 100.f, "Textures/text/score_text.png", glm::vec3(1., 1., 1.));
+	Entity* sprite = CreateEntity2D(glm::vec2(400., 400.), 0.f, 1.f, "Textures/text/score_text.png", glm::vec3(1., 1., 1.));
+	Entity* sprite2 = CreateEntity2D(glm::vec2(400., 400.), 0.f, 1.f, "Textures/text/0.png", glm::vec3(1., 1., 1.));
+	sprite2->assign<ScoreComponent>(1);
 
-	Entity* sprite2 = CreateEntity2D(glm::vec2(250., 100.), 0.f, 1.f, "Textures/science_dog.png", glm::vec3(1., 1., 1.), false, glm::vec2(100., 100.));
 
 
 	Entity* obj1 = CreateEntity3DWithMesh(glm::vec3(0., 1.5, 0.), 1, "Meshes/spaceship.obj", "Textures/spaceship/color.png", "Textures/spaceship/normal.png");

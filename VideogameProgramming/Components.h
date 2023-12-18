@@ -183,3 +183,9 @@ struct TemporaryComponent {
     float duration;
     float timeAlive = 0;
 };
+struct ScoreComponent {
+    ScoreComponent(int digit) {
+		this->digit = digit;
+	}
+    int digit;
+};

@@ -39,7 +39,7 @@ void SpawnerScript::tickScript(float deltaTime)
 					//userLookAt = -userLookAt;
 					// Assuming userPos is the ship's position, and userLookAt is the ship's facing direction
 
-// Calculate the offset distance for each side
+					// Calculate the offset distance for each side
 					float offset = 3.0f;  // Adjust this value based on your requirements
 
 					// Calculate the offset vectors for both sides

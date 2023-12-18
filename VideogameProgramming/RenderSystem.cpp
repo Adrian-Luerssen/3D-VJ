@@ -16,6 +16,7 @@ void RenderSystem::setCamera(Entity* camera)
 void RenderSystem::tick(World* world, float deltaTime) 
 {
     glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
     
     world->each<Skybox>([&](Entity* ent, ComponentHandle<Skybox> meshComp) {
 
@@ -63,6 +64,7 @@ void RenderSystem::tick(World* world, float deltaTime)
     });
 
     glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
 
     world->each<Sprite>([&](Entity* ent, ComponentHandle<Sprite> sprite) {
 
