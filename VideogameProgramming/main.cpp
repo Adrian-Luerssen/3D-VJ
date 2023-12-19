@@ -170,7 +170,7 @@ void SetupWorld() {
 
 
 	Entity* sprite = CreateEntity2D(glm::vec2(400., 400.), 0.f, 1.f, "Textures/text/score_text.png", glm::vec3(1., 1., 1.));
-	Entity* sprite2 = CreateEntity2D(glm::vec2(400., 400.), 0.f, 1.f, "Textures/text/0.png", glm::vec3(1., 1., 1.));
+	Entity* sprite2 = CreateEntity2D(glm::vec2(440., 400.), 0.f, 1.f, "Textures/text/0.png", glm::vec3(1., 1., 1.));
 	sprite2->assign<ScoreComponent>(1);
 
 

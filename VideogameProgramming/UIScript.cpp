@@ -28,6 +28,9 @@ void UIScript::tickScript(float deltaTime) {
 		tmp /= 10;
 		scoreDigits++;
 	}
+    if (scoreDigits == 0) {
+		scoreDigits = 1;
+	}
 	world->each<ScoreComponent>([&](Entity* ent, ComponentHandle<ScoreComponent> scoreComp) {
 		digits = (digits > scoreComp->digit) ? digits : scoreComp->digit;
 		});
