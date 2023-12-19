@@ -11,21 +11,34 @@ void UIScript::tickScript(float deltaTime) {
 	world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {game = gameController; });
 
 	if (changePage) {
-		//destroy all UI elements
-		world->each<UIComponent>([&](Entity* ent, ComponentHandle<UIComponent> uiComp) {
-			world->destroy(ent);
-			});
+		
 		if (page == "Menu") {
+			//destroy all UI elements
+			world->each<UIComponent>([&](Entity* ent, ComponentHandle<UIComponent> uiComp) {
+				world->destroy(ent);
+				});
 			Entity* ent = world->create();
 			ent->assign<Transform2D>(glm::vec2(400., 400.), 0.0f, 1.0f);
 			ent->assign<Sprite>("Textures/text/pulpoid.png", glm::vec3(1., 1., 1.));
 			ent->assign<UIComponent>("Title", "Menu");
+
+			Entity* ent2 = world->create();
+			ent2->assign<Transform2D>(glm::vec2(400., 400.), 0.0f, 1.0f);
+			ent2->assign<Sprite>("Textures/Buttons/Start/Start1.png", glm::vec3(1., 1., 1.),true, glm::vec2(300, 80));
+			ent2->assign<ScoreComponent>(1);
+			ent2->assign<UIComponent>("StartButton", "Menu");
+			ent2->assign<ButtonComponent>("Start", "Textures/Buttons/Start/Start1.png", "Textures/Buttons/Start/Start2.png", "Textures/Buttons/Start/Start3.png", "Textures/Buttons/Start/Start4.png", "Textures/Buttons/Start/Start5.png");
 		}
 		else if (page == "Game") {
+			//destroy all UI elements
+			world->each<UIComponent>([&](Entity* ent, ComponentHandle<UIComponent> uiComp) {
+				world->destroy(ent);
+				});
+			game->pause = false;
 			game->score = 0;
 			Entity* ent = world->create();
 			ent->assign<Transform2D>(glm::vec2(400., 400.), 0.0f, 1.0f);
-			ent->assign<Sprite>("Textures/text/scoreText.png", glm::vec3(1., 1., 1.));
+			ent->assign<Sprite>("Textures/text/score_text.png", glm::vec3(1., 1., 1.));
 			ent->assign<UIComponent>("ScoreText", "Game");
 
 			Entity* ent2 = world->create();
@@ -34,16 +47,31 @@ void UIScript::tickScript(float deltaTime) {
 			ent2->assign<ScoreComponent>(1);
 			ent2->assign<UIComponent>("ScoreVal", "Game");
 		}
+		else if (page == "pause") {
+			game->pause = true;
+			Entity* ent2 = world->create();
+			ent2->assign<Transform2D>(glm::vec2(400., 400.), 0.0f, 1.0f);
+			ent2->assign<Sprite>("Textures/Buttons/Start/Start1.png", glm::vec3(1., 1., 1.), true, glm::vec2(300, 80));
+			ent2->assign<ScoreComponent>(1);
+			ent2->assign<UIComponent>("ResumeButton", "Menu");
+			ent2->assign<ButtonComponent>("Resume", "Textures/Buttons/Start/Start1.png", "Textures/Buttons/Start/Start2.png", "Textures/Buttons/Start/Start3.png", "Textures/Buttons/Start/Start4.png", "Textures/Buttons/Start/Start5.png");
+
+		}
 		changePage = false;
 	}
 
+	
+
 	if (page == "Menu") {
-		if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
-			page = "Game";
-			changePage = true;
-		}
+		game->pause = true;
+		//if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS) {
+		//	page = "Game";
+		//	changePage = true;
+		//}
+		startButtonCheck(deltaTime);
 	}
 	else if (page == "Game") {
+		
 		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 		{
 			if (!firstClick) {
@@ -55,13 +83,15 @@ void UIScript::tickScript(float deltaTime) {
 		else {
 			firstClick = false;
 		}
-
 		int digits = 0;
 		int scoreDigits = 0;
 		int tmp = game->score;
 		while (tmp > 0) {
 			tmp /= 10;
 			scoreDigits++;
+		}
+		if (scoreDigits == 0) {
+			scoreDigits = 1;
 		}
 		world->each<ScoreComponent>([&](Entity* ent, ComponentHandle<ScoreComponent> scoreComp) {
 			digits = (digits > scoreComp->digit) ? digits : scoreComp->digit;
@@ -74,6 +104,7 @@ void UIScript::tickScript(float deltaTime) {
 			ent->assign<ScoreComponent>(scoreDigits);
 			ent->assign<UIComponent>("ScoreVal", "Game");
 		}
+
 
 		world->each<ScoreComponent>([&](Entity* ent, ComponentHandle<ScoreComponent> scoreComp) {
 			// position digits
@@ -128,8 +159,93 @@ void UIScript::tickScript(float deltaTime) {
 			}
 
 			});
+
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		{
+			game->pause = true;
+			this->changePage = true;
+			this->page = "pause";
+		}
+	}
+	else if (page == "pause") {
+		startButtonCheck(deltaTime);
 	}
 
 
 
+}
+
+void UIScript::startButtonCheck(float deltaTime) {
+
+	// check button pressed
+	world->each<ButtonComponent>([&](Entity* other_ent, ComponentHandle<ButtonComponent> button) {
+		
+		//if (button->id < 0) return;
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && !button->clicked) {
+			glm::vec2 p1 = other_ent->get<Transform2D>()->position;
+			ComponentHandle<Sprite> sprite = other_ent->get<Sprite>();
+			double mouseX, mouseY;
+			glfwGetCursorPos(window, &mouseX, &mouseY);
+
+			// Check if the click is within the entity bounds
+			if (mouseX > p1.x - sprite->size.x / 2 && mouseX < p1.x + sprite->size.x / 2 &&
+				mouseY >  p1.y - sprite->size.y / 2 && mouseY < p1.y + sprite->size.y / 2) {
+				// The mouse click is within the entity bounds
+				cout << "button clicked" << endl;
+				button->clicked = true;
+				//other_ent->get<SoundComponent>()->playSound = true;
+			}
+
+		}
+		if (button->clicked) {
+			ComponentHandle<Sprite> sprite = other_ent->get<Sprite>();
+
+			if (button->ticksSinceClicked >= 120) {
+				sprite->filepath = button->frame1;
+				//button->ticksSinceClicked = 0;
+				if (button->id == "Start") {
+					page = "Game";
+					changePage = true;
+				}
+				else if (button->id == "Resume") {
+					page = "Game";
+					world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {gameController->pause = false; });
+					world->destroy(other_ent);
+				}
+			}
+		}
+
+		});
+
+	// animate buttons
+	world->each<ButtonComponent>([&](Entity* other_ent, ComponentHandle<ButtonComponent> button) {
+		if (button->clicked) {
+			//cout << "button click animation" << endl;
+			button->ticksSinceClicked += deltaTime / 1.5f;
+			ComponentHandle<Sprite> sprite = other_ent->get<Sprite>();
+
+			int currentFrame = button->ticksSinceClicked;
+
+			if ((currentFrame >= 0 && currentFrame < 10) || (currentFrame >= 80 && currentFrame < 90)) {
+				sprite->filepath = button->frame1;
+			}
+			else if (currentFrame >= 10 && currentFrame < 20 || ((currentFrame >= 70 && currentFrame < 80))) {
+				sprite->filepath = button->frame2;
+			}
+			else if ((currentFrame >= 20 && currentFrame < 30) || (currentFrame >= 60 && currentFrame < 70)) {
+				sprite->filepath = button->frame3;
+			}
+			else if ((currentFrame >= 30 && currentFrame < 40) || (currentFrame >= 50 && currentFrame < 60)) {
+				sprite->filepath = button->frame4;
+			}
+			else if (currentFrame >= 40 && currentFrame < 50) {
+				sprite->filepath = button->frame5;
+			}
+			else if (currentFrame >= 200) {
+				sprite->filepath = button->frame1;
+				button->clicked = false;
+				button->ticksSinceClicked = 0;
+			}
+		}
+		});
 }

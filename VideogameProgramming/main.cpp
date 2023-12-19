@@ -173,7 +173,7 @@ void SetupWorld() {
 	sprite->assign<UIComponent>("ScoreText","Game");
 	Entity* sprite2 = CreateEntity2D(glm::vec2(400., 400.), 0.f, 1.f, "Textures/text/0.png", glm::vec3(1., 1., 1.));
 	sprite2->assign<ScoreComponent>(1);
-	sprite->assign<UIComponent>("ScoreVal", "Game");
+	sprite2->assign<UIComponent>("ScoreVal", "Game");
 
 
 
