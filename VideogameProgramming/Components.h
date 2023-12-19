@@ -198,3 +198,22 @@ struct UIComponent {
     const char* id;
     const char* page;
 };
+struct ButtonComponent {
+    ButtonComponent(const char* id, const char* frame1, const char* frame2, const char* frame3, const char* frame4, const char* frame5) {
+		this->id = id;
+		this->frame1 = frame1;
+		this->frame2 = frame2;
+		this->frame3 = frame3;
+		this->frame4 = frame4;
+		this->frame5 = frame5;
+	}
+	const char* id;
+	const char* frame1;
+	const char* frame2;
+	const char* frame3;
+	const char* frame4;
+	const char* frame5;
+    float ticksSinceClicked = 0;
+    bool clicked = false;
+
+};

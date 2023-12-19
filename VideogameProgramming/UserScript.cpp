@@ -175,17 +175,6 @@ void UserScript::tickScript(float deltaTime) {
 	}
 
 
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-	{
-		game->pause = true;
-	}
-
-
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-		//cout << "SHOOT" << endl;
-		game->pause = false;
-	}
-
 
 
 }

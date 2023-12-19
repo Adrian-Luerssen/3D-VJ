@@ -44,10 +44,7 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 	{
 		desiredPosition += speedDelta * glm::normalize(glm::cross(cam->front, cam->up));
 	}
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-	{
-		game->pause = true;
-	}
+	
 
 	/*if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !jump && landed)
 	{
