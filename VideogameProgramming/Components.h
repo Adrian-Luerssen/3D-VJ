@@ -189,3 +189,12 @@ struct ScoreComponent {
 	}
     int digit;
 };
+
+struct UIComponent {
+    UIComponent(const char* id, const char* page) {
+        this->id = id;
+        this->page = page;
+    }
+    const char* id;
+    const char* page;
+};

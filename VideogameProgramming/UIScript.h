@@ -17,4 +17,6 @@ public:
 
 private:
     bool firstClick = true;
+    const char* page = "Menu";
+    bool changePage = true;
 };
