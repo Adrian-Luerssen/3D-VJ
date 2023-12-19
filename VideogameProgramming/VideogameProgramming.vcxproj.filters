@@ -108,6 +108,9 @@
     <ClCompile Include="UIScript.cpp">
       <Filter>Archivos de origen\Scripts</Filter>
     </ClCompile>
+    <ClCompile Include="SoundSystem.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.vert">
@@ -211,31 +214,16 @@
     <ClInclude Include="UIScript.h">
       <Filter>Archivos de encabezado\Scripts</Filter>
     </ClInclude>
+    <ClInclude Include="SoundSystem.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Textures\science_dog.png">
-      <Filter>Archivos de recursos\Textures</Filter>
+    <Image Include="Textures\flat_normal.png">
+      <Filter>Archivos de recursos</Filter>
     </Image>
-    <Image Include="Textures\background_brown.png">
-      <Filter>Archivos de recursos\Textures</Filter>
-    </Image>
-    <Image Include="Textures\ball_blue_small.png">
-      <Filter>Archivos de recursos\Textures</Filter>
-    </Image>
-    <Image Include="Textures\button_yellow.png">
-      <Filter>Archivos de recursos\Textures</Filter>
-    </Image>
-    <Image Include="Textures\button_blue.png">
-      <Filter>Archivos de recursos\Textures</Filter>
-    </Image>
-    <Image Include="Textures\cyborgFemaleA.png">
-      <Filter>Archivos de recursos\Textures</Filter>
-    </Image>
-    <Image Include="Textures\skybox.png">
-      <Filter>Archivos de recursos\Textures</Filter>
-    </Image>
-    <Image Include="Textures\skybox2.png">
-      <Filter>Archivos de recursos\Textures</Filter>
+    <Image Include="Textures\perlin_noise.png">
+      <Filter>Archivos de recursos</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>

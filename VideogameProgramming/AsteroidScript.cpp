@@ -166,6 +166,15 @@ void AsteroidScript::spawnShards(ComponentHandle<Transform3D> transform) {
 	shard1->assign<TemporaryComponent>(randDir1, timeAlive1);
 	shard1->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/shards/shard1.obj");
 	shard1->assign<Transform3D>(transform->position, scale);
+	float volume = 0.0f;
+	//calculate volume based on distance to player
+	world->each<Camera>([&](Entity* ent, ComponentHandle<Camera> camera) {
+		float distance = glm::length(transform->position - camera->eye);
+		volume = 1.0f - (distance / camera->renderDistance);
+		});
+	shard1->assign<SoundComponent>("Sounds/Explosion.wav",volume);
+	shard1->get<SoundComponent>()->playSound = true;
+	
 
 	// Shard 2
 	glm::vec3 randDir2 = getRandomDirection();

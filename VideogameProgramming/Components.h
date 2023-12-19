@@ -217,3 +217,15 @@ struct ButtonComponent {
     bool clicked = false;
 
 };
+struct SoundComponent {
+    SoundComponent(const char* filePath,float volume = 1.0f,bool stackable = false) {
+		this->filePath = filePath;
+        this->volume = volume;
+        this->stackable = stackable;
+	}
+	const char* filePath;
+    bool stackable;
+    bool cancel = false;
+	bool playSound = false;
+    float volume;
+};

@@ -29,6 +29,7 @@
 #include "BulletScript.h"
 #include "UserScript.h"
 #include "UIScript.h"
+#include "SoundSystem.h"
 using std::cout;
 using std::endl;
 using std::chrono::duration_cast;
@@ -128,6 +129,8 @@ void SetupWorld() {
 	world->registerSystem(rs);
 	ScriptSystem* scriptSystem = new ScriptSystem();
 	world->registerSystem(scriptSystem);
+	SoundSystem* soundSystem = new SoundSystem();
+	world->registerSystem(soundSystem);
 
 	ScriptManager* scriptManager = scriptSystem->getScriptManager();
 
@@ -154,6 +157,7 @@ void SetupWorld() {
 	Entity* asteroidManager = CreateEntity3DEmpty();
 	AsteroidScript* asteroidScript = new AsteroidScript(window, world, asteroidManager);
 	asteroidManager->assign<ScriptComponent>(scriptManager->AddScript(asteroidScript));
+
 
 	Entity* skybox = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/background.png");
 	//Entity* skybox2 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/nebula_1.png");

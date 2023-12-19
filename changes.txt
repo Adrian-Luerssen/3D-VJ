@@ -1,0 +1,17 @@
+changeable camera view
+	3rd person camera
+	free camera
+
+vec3 rotation
+shaders:
+	metallic
+	normal
+	roughness
+	emissive
+	mixedAO // still not done
+
+sound system
+	volume based on distance from the user
+simple 3d animations
+
+
