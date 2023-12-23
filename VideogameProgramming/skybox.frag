@@ -12,10 +12,10 @@ const float scrollSpeed = 0.00005;
 void main()
 {
     // Calculate the scrolled texture coordinates
-    vec2 scrolledUVs = vec2(uvs.x, uvs.y - time * scrollSpeed);
+    vec2 scrolledUVs = uvs;//vec2(uvs.x, uvs.y - time * scrollSpeed);
 
     // Wrap the texture coordinates to create a seamless scrolling effect
-    scrolledUVs.y = fract(scrolledUVs.y);
+    //scrolledUVs.y = fract(scrolledUVs.y);
 
     // Sample the texture using the scrolled coordinates
     FragColor = texture(tex0, scrolledUVs);

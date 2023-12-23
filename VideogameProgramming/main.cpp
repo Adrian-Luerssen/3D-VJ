@@ -184,7 +184,17 @@ void SetupWorld() {
 	UserScript* us = new UserScript(window, world, obj1);
 	obj1->assign<ScriptComponent>(scriptManager->AddScript(us));
 	
+	Entity* canon = CreateEntity3DWithMesh(glm::vec3(0., 1.5, 0.), 1, "Meshes/canon.obj", "Textures/Enemy/cannon_diffuse2.png", "Textures/Enemy/cannon_normal.png");
+	canon->get<MeshComponent>()->roughnessFilepath = "Textures/Enemy/cannon_roughness.png";
+	//canon->get<MeshComponent>()->metallicFilepath = "Textures/Enemy/cannon_metallic.png";
+	canon->get<MeshComponent>()->emissiveFilepath = "Textures/Enemy/cannon_emit.png";
+	canon->get<MeshComponent>()->shaderName = "user";
 
+	Entity* enemy = CreateEntity3DWithMesh(glm::vec3(0., 1.5, 0.), 1, "Meshes/enemy.obj", "Textures/Enemy/spaceship_baseColor.png", "Textures/Enemy/spaceship_normal.png");
+	enemy->get<MeshComponent>()->roughnessFilepath = "Textures/Enemy/spaceship_metallicRoughness.png";
+	//canon->get<MeshComponent>()->metallicFilepath = "Textures/Enemy/cannon_metallic.png";
+	enemy->get<MeshComponent>()->emissiveFilepath = "Textures/Enemy/spaceship_emissive.png";
+	enemy->get<MeshComponent>()->shaderName = "user";
 
 	// spawn temp asteroids:
 
