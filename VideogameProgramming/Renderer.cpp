@@ -216,7 +216,7 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
 }
 
 
-void Renderer::DrawSkybox(Mesh& mesh, Texture& texture, glm::mat4 projection, Camera cam)
+void Renderer::DrawSkybox(Mesh& mesh, Texture& texture, glm::mat4 projection, Camera cam, float ticks)
 {
 
     std::shared_ptr<Shader> shader = shaderSkybox;
@@ -237,10 +237,11 @@ void Renderer::DrawSkybox(Mesh& mesh, Texture& texture, glm::mat4 projection, Ca
     shader->SetMatrix4("model", model);
     shader->SetMatrix4("view", view);
     shader->SetMatrix4("proj", proj);
+    shader->SetFloat("time", ticks);
 
     glActiveTexture(GL_TEXTURE0);
     texture.Bind();
-
+    
     //cout << mesh.indices.size() << endl;
 
     mesh.VAO.Bind();

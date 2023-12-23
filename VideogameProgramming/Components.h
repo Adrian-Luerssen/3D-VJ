@@ -47,6 +47,7 @@ struct Camera
     glm::vec3 front;
     glm::vec3 up;
     glm::vec3 target;
+    float ticks = 0;
 };
 
 struct Sprite
@@ -175,7 +176,7 @@ struct BulletComponent
 };
 
 struct TemporaryComponent {
-    TemporaryComponent(glm::vec3 dir, float duration) {
+    TemporaryComponent(glm::vec3 dir = glm::vec3(0.0f), float duration = 0.0f) {
         this->dir = dir;
         this->duration = duration;
     }

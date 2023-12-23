@@ -28,7 +28,7 @@ void RenderSystem::tick(World* world, float deltaTime)
 
         ComponentHandle<Camera> cam = camera->get<Camera>();
 
-        rend.DrawSkybox(mesh, texture, proj, cam.get());
+        rend.DrawSkybox(mesh, texture, proj, cam.get(),cam->ticks+=deltaTime/10.0f);
 
     });
     

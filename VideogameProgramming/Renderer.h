@@ -30,7 +30,7 @@ public:
     void DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm::vec3 position, float scale, glm::vec3 rotation, Camera cam, Texture& normalsTexture, Texture& rough, Texture& metallic, Texture& emissive, float far, float time,
         string shaderName = "default");
 
-    void DrawSkybox(Mesh& mesh, Texture& texture, glm::mat4 projection, Camera cam);
+    void DrawSkybox(Mesh& mesh, Texture& texture, glm::mat4 projection, Camera cam,float ticks);
 
     void Delete();
 private:

@@ -173,12 +173,6 @@ void SetupWorld() {
 
 
 
-	Entity* sprite = CreateEntity2D(glm::vec2(400., 400.), 0.f, 1.f, "Textures/text/score_text.png", glm::vec3(1., 1., 1.));
-	sprite->assign<UIComponent>("ScoreText","Game");
-	Entity* sprite2 = CreateEntity2D(glm::vec2(400., 400.), 0.f, 1.f, "Textures/text/0.png", glm::vec3(1., 1., 1.));
-	sprite2->assign<ScoreComponent>(1);
-	sprite2->assign<UIComponent>("ScoreVal", "Game");
-
 
 
 	Entity* obj1 = CreateEntity3DWithMesh(glm::vec3(0., 1.5, 0.), 1, "Meshes/spaceship.obj", "Textures/spaceship/color.png", "Textures/spaceship/normal.png");
@@ -190,6 +184,47 @@ void SetupWorld() {
 	UserScript* us = new UserScript(window, world, obj1);
 	obj1->assign<ScriptComponent>(scriptManager->AddScript(us));
 	
+
+
+	// spawn temp asteroids:
+
+	for (int i = 1; i < 11; i++) {
+		Entity* ent = world->create();
+		ent->assign<Transform3D>(glm::vec3(1000000, 1, 0.), 5);
+		switch (i) {
+		case 1:
+			ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide1.obj", "default", "Textures/asteroids/normal.png");
+			break;
+		case 2:
+			ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide2.obj", "default", "Textures/asteroids/normal.png");
+			break;
+		case 3:
+			ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide3.obj", "default", "Textures/asteroids/normal.png");
+			break;
+		case 4:
+			ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide4.obj", "default", "Textures/asteroids/normal.png");
+			break;
+		case 5:
+			ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide5.obj", "default", "Textures/asteroids/normal.png");
+			break;
+		case 6:
+			ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide6.obj", "default", "Textures/asteroids/normal.png");
+			break;
+		case 7:
+			ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide7.obj", "default", "Textures/asteroids/normal.png");
+			break;
+		case 8:
+			ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide8.obj", "default", "Textures/asteroids/normal.png");
+			break;
+		case 9:
+			ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide9.obj", "default", "Textures/asteroids/normal.png");
+			break;
+		case 10:
+			ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide10.obj", "default", "Textures/asteroids/normal.png");
+			break;
+		}
+		ent->assign<TemporaryComponent>();
+	}
 
 }
 

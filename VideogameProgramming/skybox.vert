@@ -7,6 +7,7 @@ layout (location = 4) in vec3 aBitangent;
 
 out vec2 uvs;
 out vec3 normals;
+out vec3 fragPos;  // New output variable for fragment position
 
 uniform float scale = 1.0;
 
@@ -20,4 +21,7 @@ void main()
 
    uvs = aTex;
    normals = aNormals;
+
+   // Calculate fragment position in world space
+   fragPos = vec3(model * vec4(aPos, 1.0));
 }

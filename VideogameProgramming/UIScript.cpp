@@ -13,6 +13,7 @@ void UIScript::tickScript(float deltaTime) {
 	if (changePage) {
 		
 		if (page == "Menu") {
+			game->pause = true;
 			//destroy all UI elements
 			world->each<UIComponent>([&](Entity* ent, ComponentHandle<UIComponent> uiComp) {
 				world->destroy(ent);
@@ -23,7 +24,7 @@ void UIScript::tickScript(float deltaTime) {
 			ent->assign<UIComponent>("Title", "Menu");
 
 			Entity* ent2 = world->create();
-			ent2->assign<Transform2D>(glm::vec2(400., 400.), 0.0f, 1.0f);
+			ent2->assign<Transform2D>(glm::vec2(400., 500.), 0.0f, 1.0f);
 			ent2->assign<Sprite>("Textures/Buttons/Start/Start1.png", glm::vec3(1., 1., 1.),true, glm::vec2(300, 80));
 			ent2->assign<ScoreComponent>(1);
 			ent2->assign<UIComponent>("StartButton", "Menu");
@@ -50,11 +51,28 @@ void UIScript::tickScript(float deltaTime) {
 		else if (page == "pause") {
 			game->pause = true;
 			Entity* ent2 = world->create();
-			ent2->assign<Transform2D>(glm::vec2(400., 400.), 0.0f, 1.0f);
-			ent2->assign<Sprite>("Textures/Buttons/Start/Start1.png", glm::vec3(1., 1., 1.), true, glm::vec2(300, 80));
-			ent2->assign<ScoreComponent>(1);
+			ent2->assign<Transform2D>(glm::vec2(400., 500.), 0.0f, 1.0f);
+			ent2->assign<Sprite>("Textures/Buttons/Restart/Restart1.png", glm::vec3(1., 1., 1.), true, glm::vec2(300, 80));
 			ent2->assign<UIComponent>("ResumeButton", "Menu");
-			ent2->assign<ButtonComponent>("Resume", "Textures/Buttons/Start/Start1.png", "Textures/Buttons/Start/Start2.png", "Textures/Buttons/Start/Start3.png", "Textures/Buttons/Start/Start4.png", "Textures/Buttons/Start/Start5.png");
+			ent2->assign<ButtonComponent>("Resume", "Textures/Buttons/Restart/Restart1.png", "Textures/Buttons/Restart/Restart2.png", "Textures/Buttons/Restart/Restart3.png", "Textures/Buttons/Restart/Restart4.png", "Textures/Buttons/Restart/Restart5.png");
+
+		}
+		else if (page == "GameOver") {
+			game->pause = true;
+			Entity* ent = world->create();
+			ent->assign<Transform2D>(glm::vec2(400., 400.), 0.0f, 1.0f);
+			ent->assign<Sprite>("Textures/text/game_over.png", glm::vec3(1., 1., 1.));
+			ent->assign<UIComponent>("GameOver", "Menu");
+
+			Entity* ent2 = world->create();
+			ent2->assign<Transform2D>(glm::vec2(400., 500.), 0.0f, 1.0f);
+			ent2->assign<Sprite>("Textures/Buttons/Restart/Restart1.png", glm::vec3(1., 1., 1.), true, glm::vec2(300, 80));
+			ent2->assign<ScoreComponent>(1);
+			ent2->assign<UIComponent>("RestartButton", "Menu");
+			ent2->assign<ButtonComponent>("Restart", "Textures/Buttons/Restart/Restart1.png", "Textures/Buttons/Restart/Restart2.png", "Textures/Buttons/Restart/Restart3.png", "Textures/Buttons/Restart/Restart4.png", "Textures/Buttons/Restart/Restart5.png");
+
+		}
+		else if (page == "Tutorial") {
 
 		}
 		changePage = false;
