@@ -14,13 +14,13 @@ void SpawnerScript::tickScript(float deltaTime)
 	}
 	else {
 
+		glm::vec3 userPos = glm::vec3(0.0f);
 		// spawn bullets on mouse click
 		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
 			if (!firstSpawn) {
 				if (firstClick) {
 					firstClick = false;
 					t = 0;
-					glm::vec3 userPos = glm::vec3(0.0f);
 					glm::vec3 objRot = glm::vec3(0.0f);
 					glm::vec3 userLookAt = glm::vec3(0.0f);
 					world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> user) {
@@ -116,11 +116,39 @@ void SpawnerScript::tickScript(float deltaTime)
 				ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide10.obj", "default", "Textures/asteroids/normal.png");
 				break;
 			}
-			ent->assign<EnemyComponent>(1, counter);
+			ent->assign<EnemyComponent>(1, counter,"Asteroid");
 			ent->assign<CubeCollider>(25, 25, 25);/**/
 			//counter++;
 			t = 0;
 		}
 
+		if (t > delay / 2) {
+			world->each<EnemyComponent>([&](Entity* shipEntity, ComponentHandle<EnemyComponent> enemyComp) {
+				if (enemyComp->name != "Ship") return;
+				int shipID = enemyComp->id;
+
+				world->each<EnemyShipCanon>([&](Entity* ent, ComponentHandle<EnemyShipCanon> enemyCanon) {
+					// Calculate direction vector from enemy cannon to user position
+					glm::vec3 canonPos = ent->get<Transform3D>()->position;
+					glm::vec3 cannonRot = ent->get<Transform3D>()->rotation;
+
+					glm::mat4 rotationMatrix =
+						glm::rotate(glm::mat4(1.0f), cannonRot.y, glm::vec3(0.0f, 1.0f, 0.0f)) *
+						glm::rotate(glm::mat4(1.0f), cannonRot.x, glm::vec3(1.0f, 0.0f, 0.0f)) *
+						glm::rotate(glm::mat4(1.0f), cannonRot.z, glm::vec3(0.0f, 0.0f, 1.0f));
+
+					glm::vec3 forward = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f)));
+					glm::vec3 cannonLookAt = glm::normalize(forward);
+					Entity* entLeft = world->create();
+					entLeft->assign<Transform3D>(canonPos, 10, cannonRot);
+					entLeft->assign<MeshComponent>("Textures/flat_normal.png", "Meshes/bullet.obj", "bullet");
+					entLeft->assign<BulletComponent>(canonPos, -cannonLookAt);
+					entLeft->assign<CubeCollider>(2, 2, 2);
+					});
+
+				});
+
+		}
+		
 	}
 }

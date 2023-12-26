@@ -18,6 +18,7 @@ void AsteroidScript::tickScript(float deltaTime) {
 
 	
 	world->each<EnemyComponent>([&](Entity* entity, ComponentHandle<EnemyComponent> enemyComp) {
+		if (enemyComp->name != "Asteroid") return;
 		if (enemyComp->destroyed) {
 			// spawn shards
 			spawnShards(entity->get<Transform3D>());
@@ -47,6 +48,7 @@ void AsteroidScript::tickScript(float deltaTime) {
 
 
 			ComponentHandle<CubeCollider> collider = entity->get<CubeCollider>();
+			if (collider == NULL) return;
 			ComponentHandle<EnemyComponent> enemy = entity->get<EnemyComponent>();
 
 			transform->position += (enemyComp->dir * deltaTime / 10.f);

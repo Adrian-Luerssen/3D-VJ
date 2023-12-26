@@ -54,6 +54,7 @@ void BulletScript::CheckCollisions(Entity* entity) {
 		if (col) return;
 		ComponentHandle<Transform3D> enemyTransform = ent->get<Transform3D>();
 		ComponentHandle<CubeCollider> enemyCollider = ent->get<CubeCollider>();
+		if (enemyCollider == NULL) return;
 
 		// Check for collision along the X-axis
 		bool collisionX = bulletTransform->position.x + bulletCollider->width >= enemyTransform->position.x - enemyCollider->width &&
@@ -68,7 +69,7 @@ void BulletScript::CheckCollisions(Entity* entity) {
 			enemyTransform->position.z + enemyCollider->length >= bulletTransform->position.z - bulletCollider->length;
 
 		// If there is a collision along all axes, then a collision occurred
-		if (collisionX && collisionY && collisionZ & !enemy->destroyed) {
+		if (collisionX && collisionY && collisionZ && !enemy->destroyed) {
 			// Collision happened, you can handle it here
 			cout << "COLLISION!!!!!!!!!!!" << endl;
 			world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> game) {game->score += enemy->points; });
@@ -86,82 +87,4 @@ void BulletScript::CheckCollisions(Entity* entity) {
 
 
 
-/*
-void EnemyBulletScript::startScript() {
 
-}
-
-void EnemyBulletScript::tickScript(float deltaTime) {
-	ComponentHandle<BoxCollider> collider = entity->get<BoxCollider>();
-	ComponentHandle<BulletComponent> bullet = entity->get<BulletComponent>();
-	ComponentHandle<Transform> transform = entity->get<Transform>();
-	ComponentHandle<Sprite> sprite = entity->get<Sprite>();
-	ComponentHandle<EnemyComponent> enemy = entity->get<EnemyComponent>();
-
-	if (collider->collidedWith) {
-		bullet->idle;
-		transform->position.x = BulletScript::idlePos;
-		transform->position.y = BulletScript::idlePos;
-		collider->collidedWith = false;
-	}
-
-	if (bullet->shot) {
-		entity->get<SoundComponent>()->playSound = true;
-		ComponentHandle<BulletComponent> bullet = entity->get<BulletComponent>();
-		//if (bullet->idle) return;
-		ComponentHandle<Transform> transform = entity->get<Transform>();
-
-		transform->position.x = bullet->posX;
-		transform->position.y = bullet->posY;
-		bullet->idle = false;
-		bullet->shot = false;
-		bullet->idle = false;
-		ticksSinceFired = 0;
-		sprite->filepath = "Textures/Bullet/Bullet_1.png";
-
-		return;
-	}
-	if (bullet->idle) return;
-	//cout << "bullet pos: " << transform->position.x << ", " << transform->position.y << endl;
-	if ((transform->position.x > 800 || transform->position.x < 0) || (transform->position.y > 800 || transform->position.y < 0)) {
-		cout << "Going idle" << endl;
-		bullet->idle = true;
-		transform->position.x = BulletScript::idlePos;
-		transform->position.y = BulletScript::idlePos;
-		return;
-	}
-
-
-		ticksSinceFired += deltaTime / 5.5f;
-		if (ticksSinceFired >= 0 && ticksSinceFired < 10) {
-			sprite->filepath = bullet->frame1;
-		}
-		else {
-			int tickMod = static_cast<int>(round(ticksSinceFired)) % 30;
-
-			if (tickMod >= 0 && tickMod < 10) {
-				//cout << "sprite 1" << endl;
-				sprite->filepath = bullet->frame2;
-			}
-			else if (tickMod >= 10 && tickMod < 20) {
-				//cout << "sprite 2" << endl;
-				sprite->filepath = bullet->frame3;
-			}
-			else {
-				//cout << "sprite 3" << endl;
-				sprite->filepath = bullet->frame4;
-			}
-		}
-
-
-
-	// cout << "tick ball" << endl;
-	// cout << "pos: " << transform->position.x << ", " << transform->position.y << endl;
-	// cout << "tick enemy bullet" << endl;
-	transform->position.y += bullet->dirY * deltaTime / 3.f;
-	transform->position.x += bullet->dirX * deltaTime / 3.f;
-
-
-}
-
-*/

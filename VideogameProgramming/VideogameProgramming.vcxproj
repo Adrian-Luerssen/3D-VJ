@@ -149,6 +149,7 @@
     <ClCompile Include="BulletScript.cpp" />
     <ClCompile Include="Components.cpp" />
     <ClCompile Include="EBO.cpp" />
+    <ClCompile Include="EnemyShipScript.cpp" />
     <ClCompile Include="FirstPersonCameraScript.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="EBO.h" />
     <ClInclude Include="ECS.h" />
     <ClInclude Include="Components.h" />
+    <ClInclude Include="EnemyShipScript.h" />
     <ClInclude Include="FirstPersonCameraScript.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshManager.h" />

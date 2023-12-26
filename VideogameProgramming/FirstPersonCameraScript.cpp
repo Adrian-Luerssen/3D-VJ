@@ -100,7 +100,7 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 		if (col) return;
 		ComponentHandle<Transform3D> enemyTransform = ent->get<Transform3D>();
 		ComponentHandle<CubeCollider> enemyCollider = ent->get<CubeCollider>();
-
+		if (enemyCollider == NULL) return;
 		// Check for collision along the X-axis
 		bool collisionX = desiredPosition.x >= enemyTransform->position.x - enemyCollider->width &&
 			enemyTransform->position.x + enemyCollider->width >= desiredPosition.x;

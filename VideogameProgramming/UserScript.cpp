@@ -80,6 +80,7 @@ void UserScript::tickScript(float deltaTime) {
 			if (col) return;
 			ComponentHandle<Transform3D> enemyTransform = ent->get<Transform3D>();
 			ComponentHandle<CubeCollider> enemyCollider = ent->get<CubeCollider>();
+			if (enemyCollider == NULL) return;
 
 			// Check for collision along the X-axis
 			bool collisionX = desiredEye.x >= enemyTransform->position.x - enemyCollider->width &&
@@ -97,7 +98,7 @@ void UserScript::tickScript(float deltaTime) {
 			if (collisionX && collisionY && collisionZ) {
 				// Collision happened, you can handle it here
 				cout << "lives --" << endl;
-				ent->getWorld()->destroy(ent);
+				enemy->destroyed = true;
 				col = true;
 			}
 			});

@@ -151,10 +151,12 @@ struct UserComponent
 
 struct EnemyComponent
 {
-    EnemyComponent(int points, int id) {
+    EnemyComponent(int points, int id, const char* name) {
         this->points = points;
         this->id = id;
+        this->name = name;
     }
+    const char* name;
     int points = 0;
     int id = 0;
     bool spawned = false;
@@ -163,6 +165,7 @@ struct EnemyComponent
     bool destroyed = false;
     float ticksSinceDestroyed = 0;
 };
+
 struct BulletComponent
 {
     BulletComponent(glm::vec3 pos, glm::vec3 dir) {
@@ -229,4 +232,16 @@ struct SoundComponent {
     bool cancel = false;
 	bool playSound = false;
     float volume;
+};
+
+struct EnemyShipCanon
+{
+    EnemyShipCanon(glm::vec3 lowRotBound, glm::vec3 highRotBound, int shipID) {
+        this->highRotBound = highRotBound;
+        this->lowRotBound = lowRotBound;
+        this->shipID = shipID;
+    }
+    int shipID;
+    glm::vec3 lowRotBound;
+    glm::vec3 highRotBound;
 };

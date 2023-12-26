@@ -30,6 +30,7 @@
 #include "UserScript.h"
 #include "UIScript.h"
 #include "SoundSystem.h"
+#include "EnemyShipScript.h"
 using std::cout;
 using std::endl;
 using std::chrono::duration_cast;
@@ -158,11 +159,14 @@ void SetupWorld() {
 	AsteroidScript* asteroidScript = new AsteroidScript(window, world, asteroidManager);
 	asteroidManager->assign<ScriptComponent>(scriptManager->AddScript(asteroidScript));
 
+	Entity* enemyShipManager = CreateEntity3DEmpty();
+	EnemyShipScript* enemyShipScript = new EnemyShipScript(window, world, enemyShipManager);
+	enemyShipManager->assign<ScriptComponent>(scriptManager->AddScript(enemyShipScript));
 
 	Entity* skybox = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/background.png");
 	//Entity* skybox2 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/nebula_1.png");
 	//Entity* skybox3 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/nebula_2.png");
-	Entity* skybox4 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/space2.png");
+	Entity* skybox4 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/Enemy/cannon_normal.png");
 
 	//Entity* floor = CreateEntity3DWithMesh(glm::vec3(32, 0, 18), 30, "Meshes/plane.obj", "Textures/background_brown.png", "Textures/sand/Sand_norm.png");
 
@@ -183,18 +187,21 @@ void SetupWorld() {
 	obj1->get<MeshComponent>()->shaderName = "user";
 	UserScript* us = new UserScript(window, world, obj1);
 	obj1->assign<ScriptComponent>(scriptManager->AddScript(us));
-	
-	Entity* canon = CreateEntity3DWithMesh(glm::vec3(0., 1.5, 0.), 1, "Meshes/canon.obj", "Textures/Enemy/cannon_diffuse2.png", "Textures/Enemy/cannon_normal.png");
+
+	Entity* enemy = CreateEntity3DWithMesh(glm::vec3(100., 1.5, 0.), 1, "Meshes/enemy.obj", "Textures/Enemy/cannon1_normal.png", "Textures/Enemy/cannon1_normal.png");
+	enemy->get<MeshComponent>()->roughnessFilepath = "Textures/Enemy/spaceship_metallicRoughness.png";
+	//canon->get<MeshComponent>()->metallicFilepath = "Textures/Enemy/cannon_metallic.png";
+	enemy->get<MeshComponent>()->emissiveFilepath = "Textures/Enemy/spaceship_emissive.png";
+	//enemy->get<MeshComponent>()->shaderName = "user";
+	enemy->assign<EnemyComponent>(5, -10,"Ship");
+	enemy->assign<CubeCollider>(50, 50, 50);
+
+	Entity* canon = CreateEntity3DWithMesh(glm::vec3(100., 1.5, 0.), 1, "Meshes/canon.obj", "Textures/Enemy/cannon_diffuse2.png", "Textures/Enemy/cannon_normal.png");
 	canon->get<MeshComponent>()->roughnessFilepath = "Textures/Enemy/cannon_roughness.png";
 	//canon->get<MeshComponent>()->metallicFilepath = "Textures/Enemy/cannon_metallic.png";
 	canon->get<MeshComponent>()->emissiveFilepath = "Textures/Enemy/cannon_emit.png";
 	canon->get<MeshComponent>()->shaderName = "user";
-
-	Entity* enemy = CreateEntity3DWithMesh(glm::vec3(0., 1.5, 0.), 1, "Meshes/enemy.obj", "Textures/Enemy/spaceship_baseColor.png", "Textures/Enemy/spaceship_normal.png");
-	enemy->get<MeshComponent>()->roughnessFilepath = "Textures/Enemy/spaceship_metallicRoughness.png";
-	//canon->get<MeshComponent>()->metallicFilepath = "Textures/Enemy/cannon_metallic.png";
-	enemy->get<MeshComponent>()->emissiveFilepath = "Textures/Enemy/spaceship_emissive.png";
-	enemy->get<MeshComponent>()->shaderName = "user";
+	canon->assign<EnemyShipCanon>(glm::vec3(0), glm::vec3(0), -10);
 
 	// spawn temp asteroids:
 
