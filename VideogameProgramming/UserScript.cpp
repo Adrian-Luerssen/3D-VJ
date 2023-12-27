@@ -2,15 +2,19 @@
 #include <cmath>
 
 
+template<typename T>
+T lerp(const T& start, const T& end, float t) {
+    return start + t * (end - start);
+}
 
 
 void UserScript::tickScript(float deltaTime) {
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 	{
-		speed = 0.2f;
+		speed = 0.3f;
 	}
 	else {
-		speed = 0.1f;
+		speed = 0.15f;
 	}
 	float speedDelta = speed * deltaTime;
 
@@ -43,18 +47,37 @@ void UserScript::tickScript(float deltaTime) {
 	glm::vec3 forward = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f)));
 	glm::vec3 right = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(1.0f, 0.0f, 0.0f, 0.0f)));
 	glm::vec3 up = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(0.0f, 1.0f, 0.0f, 0.0f)));
+
+	float speedFactor = 400.0f;
 	if (!game->pause)
 	{
 		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		{
 			desiredEye -= speedDelta * forward;
-			user->thrust += deltaTime / 200.0f;
-			if (user->thrust > 1) {
-				user->thrust = 1;
+			if (speed == 0.15f) {
+				if (user->thrust >= 0.5 && user->thrust < 0.6) {
+					user->thrust = 0.5;
+				}
+				else if (user->thrust > 0.5) {
+					user->thrust -= deltaTime / speedFactor;
+				}
+				else {
+					user->thrust += deltaTime / speedFactor;
+
+				}
 			}
+			else {
+				if (user->thrust >= 1) {
+					user->thrust = 1;
+				}
+				else {
+					user->thrust += deltaTime / speedFactor;
+				}
+			}
+			//cout << "user thrust: " << user->thrust << endl;
 		}
 		else {
-			user->thrust -= deltaTime / 200.0f;
+			user->thrust -= deltaTime / speedFactor;
 			if (user->thrust < 0) {
 				user->thrust = 0;
 			}
@@ -115,7 +138,7 @@ void UserScript::tickScript(float deltaTime) {
 		//user->eye.y = desiredEye.y;
 		//cout << "pos: " << user->eye.x << ", " << user->eye.y << ", " << user->eye.z << endl;
 
-		transf->position = desiredEye;
+		transf->position = lerp(transf->position, desiredEye, 0.5);
 		//user->eye.y += eyeLevel;
 
 
@@ -164,11 +187,12 @@ void UserScript::tickScript(float deltaTime) {
 		// Calculate the camera's position based on the object's rotation (pitch and yaw)
 		float distance = 100.0f; // Adjust the distance as needed
 		float heightOffset = 20.0f; // Adjust the height offset as needed
-		glm::vec3 offset = glm::vec3(0.0f, heightOffset, -distance); // Adjust the offset values
+		glm::vec3 offset = glm::vec3(0.0f, heightOffset, -(distance + (user->thrust * 25))); // Adjust the offset values
 		rotationMatrix = glm::rotate(glm::mat4(1.0f), transf->rotation.y, glm::vec3(0, 1, 0));
 		rotationMatrix = glm::rotate(rotationMatrix, transf->rotation.x, glm::vec3(1, 0, 0));
-		cam->eye = transf->position + glm::vec3(rotationMatrix * glm::vec4(offset, 1.0f));
-
+		glm::vec3 desiredEye = transf->position + glm::vec3(rotationMatrix * glm::vec4(offset, 1.0f));
+		
+		cam->eye = desiredEye;
 		// Assuming you want the camera to always face the back of the object
 		cam->front = -forward;
 	}

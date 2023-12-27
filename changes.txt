@@ -17,3 +17,5 @@ simple 3d animations
 enemy ships aim at user
 
 basic UI
+
+preload all objects to remove inner game lag
