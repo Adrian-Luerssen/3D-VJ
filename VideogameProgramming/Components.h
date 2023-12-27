@@ -70,7 +70,7 @@ struct Sprite
 struct MeshComponent
 {
     MeshComponent(const char* textureFilepath, const char* meshFilepath, const char* shaderName = "default", const char* normalsFilepath = "Textures/flat_normal.png"
-        , const char* roughnessFilepath = "none", const char* emissiveFilepath = "none", const char* metallicFilepath = "none") {
+        , const char* roughnessFilepath = "Textures/black.png", const char* emissiveFilepath = "Textures/black.png", const char* metallicFilepath = "Textures/black.png") {
         this->textureFilepath = textureFilepath;
         this->meshFilepath = meshFilepath;
         this->shaderName = shaderName;
