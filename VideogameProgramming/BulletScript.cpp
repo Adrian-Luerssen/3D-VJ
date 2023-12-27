@@ -8,6 +8,7 @@ void BulletScript::tickScript(float deltaTime) {
 	ComponentHandle<GameController> game;
 	world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {game = gameController; });
 	if (game->pause) return;
+
 	world->each<BulletComponent>([&](Entity* ent, ComponentHandle<BulletComponent> bullet) {
 		ComponentHandle<Transform3D> transform = ent->get<Transform3D>();
 		float renderDistance = 5000;
@@ -35,6 +36,12 @@ void BulletScript::tickScript(float deltaTime) {
 		//cout << "pos: " << transform->position.x << ", " << transform->position.y << endl;
 
 		transform->position -= bullet->dir * deltaTime / this->speed;
+		ComponentHandle<EnemyComponent> enemy = ent->get<EnemyComponent>();
+		if (enemy != NULL) {
+			if (enemy->destroyed) {
+				world->destroy(ent);
+			}
+		}
 
 
 		// Calculate the rotation angles needed to align the object with the camera direction
@@ -52,10 +59,11 @@ void BulletScript::CheckCollisions(Entity* entity) {
 	bool col = false;
 	world->each<EnemyComponent>([&](Entity* ent, ComponentHandle<EnemyComponent> enemy) {
 		if (col) return;
+		if (entity->get<EnemyComponent>() != NULL && enemy->name == "Enemy Bullet") { /*cout << "HITTING SELF" << endl;*/ return; }
 		ComponentHandle<Transform3D> enemyTransform = ent->get<Transform3D>();
 		ComponentHandle<CubeCollider> enemyCollider = ent->get<CubeCollider>();
 		if (enemyCollider == NULL) return;
-
+		if (!entity->get<BulletComponent>()->userBullet && enemy->name == "Ship") return;
 		// Check for collision along the X-axis
 		bool collisionX = bulletTransform->position.x + bulletCollider->width >= enemyTransform->position.x - enemyCollider->width &&
 			enemyTransform->position.x + enemyCollider->width >= bulletTransform->position.x - bulletCollider->width;
@@ -72,7 +80,9 @@ void BulletScript::CheckCollisions(Entity* entity) {
 		if (collisionX && collisionY && collisionZ && !enemy->destroyed) {
 			// Collision happened, you can handle it here
 			cout << "COLLISION!!!!!!!!!!!" << endl;
-			world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> game) {game->score += enemy->points; });
+			if (entity->get<BulletComponent>()->userBullet) {
+				world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> game) {game->score += enemy->points; });
+			}
 			enemy->destroyed = true;
 			ent->getWorld()->destroy(entity);
 			col = true;

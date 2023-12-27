@@ -26,6 +26,7 @@ void UserScript::tickScript(float deltaTime) {
 		return;
 	}
 	ComponentHandle<UserComponent> user = entity->get<UserComponent>();
+	ComponentHandle<CubeCollider> userCollider = entity->get<CubeCollider>();
 	ComponentHandle<Transform3D> transf = entity->get<Transform3D>();
 	glm::vec3 currentEye = transf->position;
 	glm::vec3 desiredEye = transf->position;
@@ -78,28 +79,32 @@ void UserScript::tickScript(float deltaTime) {
 
 		world->each<EnemyComponent>([&](Entity* ent, ComponentHandle<EnemyComponent> enemy) {
 			if (col) return;
+			if (game->imunity) return;
 			ComponentHandle<Transform3D> enemyTransform = ent->get<Transform3D>();
 			ComponentHandle<CubeCollider> enemyCollider = ent->get<CubeCollider>();
 			if (enemyCollider == NULL) return;
 
 			// Check for collision along the X-axis
-			bool collisionX = desiredEye.x >= enemyTransform->position.x - enemyCollider->width &&
-				enemyTransform->position.x + enemyCollider->width >= desiredEye.x;
+			bool collisionX = transf->position.x + userCollider->width >= enemyTransform->position.x - enemyCollider->width &&
+				enemyTransform->position.x + enemyCollider->width >= transf->position.x - userCollider->width;
 
 			// Check for collision along the Y-axis
-			bool collisionY = desiredEye.y >= enemyTransform->position.y - enemyCollider->height &&
-				enemyTransform->position.y + enemyCollider->height >= desiredEye.y;
+			bool collisionY = transf->position.y + userCollider->height >= enemyTransform->position.y - enemyCollider->height &&
+				enemyTransform->position.y + enemyCollider->height >= transf->position.y - userCollider->height;
 
 			// Check for collision along the Z-axis
-			bool collisionZ = desiredEye.z >= enemyTransform->position.z - enemyCollider->length &&
-				enemyTransform->position.z + enemyCollider->length >= desiredEye.z;
+			bool collisionZ = transf->position.z + userCollider->length >= enemyTransform->position.z - enemyCollider->length &&
+				enemyTransform->position.z + enemyCollider->length >= transf->position.z - userCollider->length;
 
 			// If there is a collision along all axes, then a collision occurred
 			if (collisionX && collisionY && collisionZ) {
 				// Collision happened, you can handle it here
-				cout << "lives --" << endl;
 				enemy->destroyed = true;
+				game->lives--;
+				game->imunity = true;
+				entity->get<SoundComponent>()->playSound = true;
 				col = true;
+				cout << "hit by "<<enemy->name<< " only have "<<game->lives <<" left" << endl;
 			}
 			});
 

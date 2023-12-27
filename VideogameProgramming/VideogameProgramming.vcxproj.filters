@@ -108,11 +108,11 @@
     <ClCompile Include="UIScript.cpp">
       <Filter>Archivos de origen\Scripts</Filter>
     </ClCompile>
-    <ClCompile Include="SoundSystem.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="EnemyShipScript.cpp">
       <Filter>Archivos de origen\Scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSystem.cpp">
+      <Filter>Archivos de origen\ECS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -217,11 +217,11 @@
     <ClInclude Include="UIScript.h">
       <Filter>Archivos de encabezado\Scripts</Filter>
     </ClInclude>
-    <ClInclude Include="SoundSystem.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="EnemyShipScript.h">
       <Filter>Archivos de encabezado\Scripts</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundSystem.h">
+      <Filter>Archivos de encabezado\ECS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

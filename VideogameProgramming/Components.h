@@ -81,9 +81,9 @@ struct MeshComponent
     const char* meshFilepath;
     const char* shaderName;
 
-    const char* roughnessFilepath;
-    const char* emissiveFilepath;
-    const char* metallicFilepath;
+    const char* roughnessFilepath = "met_roug_default.png";
+    const char* emissiveFilepath = "met_roug_default.png";
+    const char* metallicFilepath = "met_roug_default.png";
 };
 
 struct Skybox
@@ -136,10 +136,11 @@ struct GameController {
     bool pause = true;
     bool freeCam = false;
     int score = 0;
+    int lives = 5;
+    bool imunity = false;
 };
 struct UserComponent
 {
-    int lives = 0;
     bool hit = false;
     bool destroyed = false;
     int shipSpeed = 0;
@@ -168,13 +169,15 @@ struct EnemyComponent
 
 struct BulletComponent
 {
-    BulletComponent(glm::vec3 pos, glm::vec3 dir) {
+    BulletComponent(glm::vec3 pos, glm::vec3 dir,bool userBullet = true) {
         this->pos = pos;
         this->dir = dir;
+        this->userBullet = userBullet;
     }
 
     glm::vec3 pos;
     glm::vec3 dir;
+    bool userBullet;
 
 };
 
@@ -222,7 +225,7 @@ struct ButtonComponent {
 
 };
 struct SoundComponent {
-    SoundComponent(const char* filePath,float volume = 1.0f,bool stackable = false) {
+    SoundComponent(const char* filePath,float volume = 1.0f,bool stackable = true) {
 		this->filePath = filePath;
         this->volume = volume;
         this->stackable = stackable;
@@ -244,4 +247,13 @@ struct EnemyShipCanon
     int shipID;
     glm::vec3 lowRotBound;
     glm::vec3 highRotBound;
+    float ticksToFire = std::rand() % 100;
+    float ticks = 0;
+};
+
+struct HeartComponent {
+    HeartComponent(int heartID) {
+        this->heartID = heartID;
+    }
+    int heartID;
 };

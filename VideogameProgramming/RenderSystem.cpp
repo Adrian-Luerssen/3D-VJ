@@ -47,15 +47,21 @@ void RenderSystem::tick(World* world, float deltaTime)
 
         ComponentHandle<Camera> cam = camera->get<Camera>();
         ComponentHandle<UserComponent> user = ent->get<UserComponent>();
-        if (user == NULL) {
+        if (user == NULL && meshComp->shaderName != "user") {
             rend.DrawMesh(mesh, texture, proj, transform->position, transform->scale, transform->rotation, cam.get(), normalsTexture, far, meshComp->shaderName);
         }
         else {
             Texture roughTexture = textureManager.GetTexture(meshComp->roughnessFilepath);
             Texture metallicTexture = textureManager.GetTexture(meshComp->metallicFilepath);
             Texture emissiveTexture = textureManager.GetTexture(meshComp->emissiveFilepath);
-            user->ticks += deltaTime / 200.0f;
-            rend.DrawMesh(mesh, texture, proj, transform->position, transform->scale, transform->rotation, cam.get(), normalsTexture, roughTexture, metallicTexture, emissiveTexture, far, user->thrust, meshComp->shaderName);
+            if (user != NULL) {
+                user->ticks += deltaTime / 200.0f;
+                rend.DrawMesh(mesh, texture, proj, transform->position, transform->scale, transform->rotation, cam.get(), normalsTexture, roughTexture, metallicTexture, emissiveTexture, far, user->thrust, meshComp->shaderName);
+            }
+            else {
+                rend.DrawMesh(mesh, texture, proj, transform->position, transform->scale, transform->rotation, cam.get(), normalsTexture, roughTexture, metallicTexture, emissiveTexture, far, 1, meshComp->shaderName);
+
+            }
         }
 
         

@@ -21,4 +21,8 @@ private:
     const char* page = "Menu";
     bool changePage = true;
     bool clearScreen = false;
+
+    float t;
+    bool blink;
+    float blinkTime = 300.0f;
 };

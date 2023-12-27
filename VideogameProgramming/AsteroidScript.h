@@ -21,6 +21,8 @@ public:
 private:
     void generateStartPos(int level, float renderDistance, glm::vec3& userPos);
     void spawnShards(ComponentHandle<Transform3D> transform);
+    float getRandomFloat();
+    glm::vec3 getRandomDirection();
 
     int hp = 1;
     bool destroyed = false;

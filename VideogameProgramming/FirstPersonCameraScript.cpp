@@ -46,89 +46,8 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 	}
 	
 
-	/*if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !jump && landed)
-	{
-		//desiredPosition += speedDelta * cam->up;
-		jump = true;
-		cout << "jump" << endl;
-		timeSinceJump = 0;
-	}
-	if (glfwGetKey(window, GLFW_KEY_SPACE) != GLFW_PRESS && cheat) {
-		jump = false;
-	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-	{
-		desiredPosition += speedDelta * -cam->up;
-	}
-	timeSinceJump += deltaTime / 60.0f;
 
-	if (jump) {
-		landed = false;
-		float dif = -0.2f * (pow((timeSinceJump - 2), 2)) + 1;
-		if (cheat) dif = 0.5f;
-		cout << dif << endl;
-		desiredPosition.y += dif;
-		if (dif < 0) {
-			jump = false;
-			cout << "end jump" << endl << endl;
-			timeSinceJump = 0;
-
-		}
-	}
-	else {
-		float dif = 0.2f * (pow((timeSinceJump - 2), 2)) - 1;
-		if (desiredPosition.y > 0)
-		{
-			//cout << "landing" << endl;
-			if (dif < 0) {
-				desiredPosition.y += dif;
-			}
-			else {
-				timeSinceJump = 0;
-			}
-		}
-		if (desiredPosition.y < 0) {
-			desiredPosition.y = 0;
-			cout << "Fall" << endl;
-			landed = true;
-		}
-
-	}*/
-	bool col = false;
-
-	world->each<EnemyComponent>([&](Entity* ent, ComponentHandle<EnemyComponent> enemy) {
-		if (col) return;
-		ComponentHandle<Transform3D> enemyTransform = ent->get<Transform3D>();
-		ComponentHandle<CubeCollider> enemyCollider = ent->get<CubeCollider>();
-		if (enemyCollider == NULL) return;
-		// Check for collision along the X-axis
-		bool collisionX = desiredPosition.x >= enemyTransform->position.x - enemyCollider->width &&
-			enemyTransform->position.x + enemyCollider->width >= desiredPosition.x;
-
-		// Check for collision along the Y-axis
-		bool collisionY = desiredPosition.y >= enemyTransform->position.y - enemyCollider->height &&
-			enemyTransform->position.y + enemyCollider->height >= desiredPosition.y;
-
-		// Check for collision along the Z-axis
-		bool collisionZ = desiredPosition.z >= enemyTransform->position.z - enemyCollider->length &&
-			enemyTransform->position.z + enemyCollider->length >= desiredPosition.z;
-
-		// If there is a collision along all axes, then a collision occurred
-		if (collisionX && collisionY && collisionZ) {
-			// Collision happened, you can handle it here
-			cout << "lives --" << endl;
-			ent->getWorld()->destroy(ent);
-			col = true;
-		}
-		});
-
-	//if (desiredPosition.y < -5) {
-	//	cout << "fallen out of world" << endl;
-	//	desiredPosition.y = 20;
-	//}
-	//cam->position.y = desiredPosition.y;
-	//cout << "pos: " << cam->position.x << ", " << cam->position.y << ", " << cam->position.z << endl;
-
+	
 	cam->eye = desiredPosition;
 	//cam->position.y += eyeLevel;
 
@@ -180,10 +99,7 @@ void FirstPersonCameraScript::tickScript(float deltaTime) {
 		// Makes sure the next time the camera looks around it doesn't jump
 		firstClick = true;
 	}
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-		//cout << "SHOOT" << endl;
-		game->pause = false;
-	}
+	
 
 	cam->target = cam->eye;
 

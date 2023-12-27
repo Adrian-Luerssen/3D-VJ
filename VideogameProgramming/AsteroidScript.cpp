@@ -150,12 +150,12 @@ void AsteroidScript::generateStartPos(int level, float renderDistance, glm::vec3
 }
 
 
-float getRandomFloat() {
+float AsteroidScript::getRandomFloat() {
 	return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 }
 
 // Function to generate a random direction vector
-glm::vec3 getRandomDirection() {
+glm::vec3 AsteroidScript::getRandomDirection() {
 	return glm::normalize(glm::vec3(static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 2.0f - 1.0f, static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 2.0f - 1.0f, static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 2.0f - 1.0f));
 }
 

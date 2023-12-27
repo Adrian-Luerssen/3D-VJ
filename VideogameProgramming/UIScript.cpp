@@ -35,8 +35,17 @@ void UIScript::tickScript(float deltaTime) {
 			world->each<UIComponent>([&](Entity* ent, ComponentHandle<UIComponent> uiComp) {
 				world->destroy(ent);
 				});
+			world->each<EnemyComponent>([&](Entity* ent, ComponentHandle<EnemyComponent> uiComp) {
+				world->destroy(ent);
+				});
+			world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> uiComp) {
+				ent->get<Transform3D>()->position = glm::vec3(0., 1.5, 0.);
+				ent->get<Transform3D>()->rotation = glm::vec3(0.0f);
+
+				});
 			game->pause = false;
 			game->score = 0;
+			game->lives = 5;
 			Entity* ent = world->create();
 			ent->assign<Transform2D>(glm::vec2(400., 400.), 0.0f, 1.0f);
 			ent->assign<Sprite>("Textures/text/score_text.png", glm::vec3(1., 1., 1.));
@@ -47,30 +56,45 @@ void UIScript::tickScript(float deltaTime) {
 			ent2->assign<Sprite>("Textures/text/0.png", glm::vec3(1., 1., 1.));
 			ent2->assign<ScoreComponent>(1);
 			ent2->assign<UIComponent>("ScoreVal", "Game");
+			
+			for (int i = 0; i < game->lives; i++) {
+				Entity* heart = world->create();
+				heart->assign<Transform2D>(glm::vec2(400.0f-(i*30.0f), 400.0f), 0.0f, 1.0f);
+				heart->assign<Sprite>("Textures/Hearts/Heart_1.png", glm::vec3(1., 1., 1.));
+				heart->assign<HeartComponent>(i+1);
+				heart->assign<UIComponent>("HeartVal", "Game");
+			}
 		}
 		else if (page == "pause") {
 			game->pause = true;
 			Entity* ent2 = world->create();
 			ent2->assign<Transform2D>(glm::vec2(400., 500.), 0.0f, 1.0f);
 			ent2->assign<Sprite>("Textures/Buttons/Restart/Restart1.png", glm::vec3(1., 1., 1.), true, glm::vec2(300, 80));
-			ent2->assign<UIComponent>("ResumeButton", "Menu");
+			ent2->assign<UIComponent>("ResumeButton", "pause");
 			ent2->assign<ButtonComponent>("Resume", "Textures/Buttons/Restart/Restart1.png", "Textures/Buttons/Restart/Restart2.png", "Textures/Buttons/Restart/Restart3.png", "Textures/Buttons/Restart/Restart4.png", "Textures/Buttons/Restart/Restart5.png");
 
 		}
 		else if (page == "GameOver") {
 			game->pause = true;
 			Entity* ent = world->create();
-			ent->assign<Transform2D>(glm::vec2(400., 400.), 0.0f, 1.0f);
+			ent->assign<Transform2D>(glm::vec2(400., 200.), 0.0f, 1.0f);
 			ent->assign<Sprite>("Textures/text/game_over.png", glm::vec3(1., 1., 1.));
-			ent->assign<UIComponent>("GameOver", "Menu");
+			ent->assign<UIComponent>("GameOver", "GameOver");
 
 			Entity* ent2 = world->create();
-			ent2->assign<Transform2D>(glm::vec2(400., 500.), 0.0f, 1.0f);
+			ent2->assign<Transform2D>(glm::vec2(200., 500.), 0.0f, 1.0f);
 			ent2->assign<Sprite>("Textures/Buttons/Restart/Restart1.png", glm::vec3(1., 1., 1.), true, glm::vec2(300, 80));
 			ent2->assign<ScoreComponent>(1);
-			ent2->assign<UIComponent>("RestartButton", "Menu");
+			ent2->assign<UIComponent>("RestartButton", "GameOver");
 			ent2->assign<ButtonComponent>("Restart", "Textures/Buttons/Restart/Restart1.png", "Textures/Buttons/Restart/Restart2.png", "Textures/Buttons/Restart/Restart3.png", "Textures/Buttons/Restart/Restart4.png", "Textures/Buttons/Restart/Restart5.png");
 
+			Entity* ent3 = world->create();
+			ent3->assign<Transform2D>(glm::vec2(600., 500.), 0.0f, 1.0f);
+			ent3->assign<Sprite>("Textures/Buttons/Menu/Menu1.png", glm::vec3(1., 1., 1.), true, glm::vec2(300, 80));
+			ent3->assign<ScoreComponent>(1);
+			ent3->assign<UIComponent>("MenuButton", "GameOver");
+			ent3->assign<ButtonComponent>("Menu", "Textures/Buttons/Menu/Menu1.png", "Textures/Buttons/Menu/Menu2.png", "Textures/Buttons/Menu/Menu3.png", "Textures/Buttons/Menu/Menu4.png", "Textures/Buttons/Menu/Menu5.png");
+			/**/
 		}
 		else if (page == "Tutorial") {
 
@@ -178,14 +202,51 @@ void UIScript::tickScript(float deltaTime) {
 
 			});
 
+		world->each<HeartComponent>([&](Entity* ent, ComponentHandle<HeartComponent> heartComp) {
+			if (game->imunity) {
+				if (heartComp->heartID == game->lives + 1) {
+					//blink
+					t += deltaTime;
+					if (t > blinkTime) {
+						if (blink){
+							ent->get<Sprite>()->filepath = "Textures/Hearts/Heart_2.png";
+						}
+						else {
+							ent->get<Sprite>()->filepath = "Textures/Hearts/Heart_3.png";
+						}
+						blink = !blink;
+						t = 0;
+					}
+					
+				}
+			}
+			else {
+				if (heartComp->heartID > game->lives){
+					ent->get<Sprite>()->filepath = "Textures/Hearts/Heart_3.png";
+				}
+				else {
+					ent->get<Sprite>()->filepath = "Textures/Hearts/Heart_1.png";
+				}
+			}
+			
+			});
+
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		{
 			game->pause = true;
 			this->changePage = true;
 			this->page = "pause";
 		}
+
+		if (game->lives <= 0) {
+			this->changePage = true;
+			this->page = "GameOver";
+		}
 	}
 	else if (page == "pause") {
+		startButtonCheck(deltaTime);
+	}
+	else if (page == "GameOver") {
 		startButtonCheck(deltaTime);
 	}
 
@@ -224,11 +285,22 @@ void UIScript::startButtonCheck(float deltaTime) {
 				if (button->id == "Start") {
 					page = "Game";
 					changePage = true;
+					world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {gameController->pause = false; });
 				}
 				else if (button->id == "Resume") {
 					page = "Game";
 					world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {gameController->pause = false; });
 					world->destroy(other_ent);
+				}
+				else if (button->id == "Restart") {
+					page = "Game";
+					world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {gameController->pause = false; });
+					changePage = true;
+				}
+				else if (button->id == "Menu") {
+					page = "Menu";
+					world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {gameController->pause = true; });
+					changePage = true;
 				}
 			}
 		}
