@@ -7,8 +7,8 @@ shaders:
 	metallic
 	normal
 	roughness
-	emissive
-	mixedAO // still not done
+	emissive // applied based on 'thrust' value of ship
+	mixedAO
 
 sound system
 	volume based on distance from the user
@@ -19,3 +19,5 @@ enemy ships aim at user
 basic UI
 
 preload all objects to remove inner game lag
+
+'lerp' cutre to make movement more realistic

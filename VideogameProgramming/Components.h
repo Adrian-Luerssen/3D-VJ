@@ -81,9 +81,10 @@ struct MeshComponent
     const char* meshFilepath;
     const char* shaderName;
 
-    const char* roughnessFilepath = "met_roug_default.png";
-    const char* emissiveFilepath = "met_roug_default.png";
-    const char* metallicFilepath = "met_roug_default.png";
+    const char* roughnessFilepath = "Textures/black.png";
+    const char* emissiveFilepath = "Textures/black.png";
+    const char* metallicFilepath = "Textures/black.png";
+    const char* mixedAO = "Textures/white.png";
 };
 
 struct Skybox

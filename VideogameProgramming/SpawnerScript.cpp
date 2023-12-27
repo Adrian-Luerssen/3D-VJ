@@ -140,7 +140,7 @@ void SpawnerScript::tickScript(float deltaTime)
 			Entity* enemy = world->create();
 			enemy->assign<Transform3D>(glm::vec3(1000000, 1, 0.), 1);
 			enemy->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/enemy.obj", "user", "Textures/Enemy/spaceship_normal.png");
-			enemy->get<MeshComponent>()->roughnessFilepath = "Textures/Enemy/spaceship_roughness.png";
+			enemy->get<MeshComponent>()->roughnessFilepath = "Textures/Enemy/spaceship_roughness2.png";
 			//enemy->get<MeshComponent>()->metallicFilepath = "Textures/Enemy/spaceship_metallic.png";
 			enemy->get<MeshComponent>()->emissiveFilepath = "Textures/Enemy/spaceship_emit.png";
 			enemy->assign<EnemyComponent>(5, counter, "Ship");
@@ -175,6 +175,8 @@ void SpawnerScript::tickScript(float deltaTime)
 
 					glm::vec3 forward = glm::normalize(glm::vec3(rotationMatrix * glm::vec4(0.0f, 0.0f, -1.0f, 0.0f)));
 					glm::vec3 cannonLookAt = glm::normalize(forward);
+					float randomnessFactor = 0.04;
+					cannonLookAt += (static_cast<float>(std::rand()) / RAND_MAX - 0.5f) * randomnessFactor;
 					Entity* entLeft = world->create();
 					entLeft->assign<Transform3D>(canonPos, 10, cannonRot);
 					entLeft->assign<MeshComponent>("Textures/flat_normal.png", "Meshes/bullet.obj", "bullet");

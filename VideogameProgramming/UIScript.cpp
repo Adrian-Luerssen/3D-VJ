@@ -45,6 +45,9 @@ void UIScript::tickScript(float deltaTime) {
 			world->each<EnemyComponent>([&](Entity* ent, ComponentHandle<EnemyComponent> uiComp) {
 				world->destroy(ent);
 				});
+			world->each<EnemyShipCanon>([&](Entity* ent, ComponentHandle<EnemyShipCanon> uiComp) {
+				world->destroy(ent);
+				});
 			world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> uiComp) {
 				ent->get<Transform3D>()->position = glm::vec3(0., 1.5, 0.);
 				ent->get<Transform3D>()->rotation = glm::vec3(0.0f);

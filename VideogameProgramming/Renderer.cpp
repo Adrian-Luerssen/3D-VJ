@@ -153,7 +153,7 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
     mesh.VAO.Unbind();
 }
 
-void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm::vec3 position, float scale, glm::vec3 rotation, Camera cam, Texture& normalsTexture, Texture& rough, Texture& metallic, Texture& emissive, float far, float time,
+void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm::vec3 position, float scale, glm::vec3 rotation, Camera cam, Texture& normalsTexture, Texture& rough, Texture& metallic, Texture& emissive, Texture& mixedAO, float far, float time,
     string shaderName)
 {
 
@@ -208,6 +208,11 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
         glActiveTexture(GL_TEXTURE0 + 4);
         emissive.Bind();
         shader->SetTextureSampler("texEmissive", 4);
+
+
+        glActiveTexture(GL_TEXTURE0 + 5);
+        mixedAO.Bind();
+        shader->SetTextureSampler("texMixedAO", 5);
     }
 
     mesh.VAO.Bind();

@@ -184,6 +184,7 @@ void SetupWorld() {
 	obj1->get<MeshComponent>()->roughnessFilepath = "Textures/spaceship/roughness.png";
 	obj1->get<MeshComponent>()->metallicFilepath = "Textures/spaceship/metallic.png";
 	obj1->get<MeshComponent>()->emissiveFilepath = "Textures/spaceship/emissive.png";
+	obj1->get<MeshComponent>()->mixedAO = "Textures/spaceship/mixed_ao.png";
 	obj1->get<MeshComponent>()->shaderName = "user";
 	obj1->assign<CubeCollider>(25,10,50);
 	UserScript* us = new UserScript(window, world, obj1);
@@ -192,7 +193,7 @@ void SetupWorld() {
 
 	// spawn temp asteroids:
 
-	for (int i = 1; i <= 59; i++) {
+	for (int i = 1; i <= 60; i++) {
 		Entity* ent = world->create();
 		ent->assign<Transform3D>(glm::vec3(1000000, 1, 0.), 5);
 		switch (i) {
@@ -373,17 +374,21 @@ void SetupWorld() {
 		case 59:
 			ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/shards/shard25.obj", "default", "Textures/asteroids/normal.png");
 			break;
+		case 60:
+			ent->assign<MeshComponent>("Textures/flat_normal.png", "Meshes/bullet.obj", "bullet");
+			break;
+
 		}
 		ent->assign<TemporaryComponent>();
 	}
 
 	Entity* ent1 = world->create();
-	ent1->assign<Transform3D>(glm::vec3(100000, 1, 0.), 5);
+	ent1->assign<Transform3D>(glm::vec3(000000, 1, 0.), 5);
 	ent1->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/enemy.obj", "user", "Textures/Enemy/spaceship_normal.png");
 	ent1->get<MeshComponent>()->roughnessFilepath = "Textures/Enemy/spaceship_roughness2.png";
 	//ent1->get<MeshComponent>()->metallicFilepath = "Textures/Enemy/spaceship_metallic.png";
 	ent1->get<MeshComponent>()->emissiveFilepath = "Textures/Enemy/spaceship_emit.png";
-	ent1->assign<TemporaryComponent>();
+	//ent1->assign<TemporaryComponent>();
 
 
 	Entity* ent2= world->create();
