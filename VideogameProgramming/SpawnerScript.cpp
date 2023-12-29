@@ -139,9 +139,7 @@ void SpawnerScript::tickScript(float deltaTime)
 			t2 = 0;
 			Entity* enemy = world->create();
 			enemy->assign<Transform3D>(glm::vec3(1000000, 1, 0.), 1);
-			enemy->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/enemy.obj", "user", "Textures/Enemy/spaceship_normal.png");
-			enemy->get<MeshComponent>()->roughnessFilepath = "Textures/Enemy/spaceship_roughness2.png";
-			//enemy->get<MeshComponent>()->metallicFilepath = "Textures/Enemy/spaceship_metallic.png";
+			enemy->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/enemy.obj", "enemy", "Textures/Enemy/spaceship_normal.png");
 			enemy->get<MeshComponent>()->emissiveFilepath = "Textures/Enemy/spaceship_emit.png";
 			enemy->assign<EnemyComponent>(5, counter, "Ship");
 			enemy->assign<CubeCollider>(50, 50, 50);
@@ -152,7 +150,6 @@ void SpawnerScript::tickScript(float deltaTime)
 			canon->get<MeshComponent>()->roughnessFilepath = "Textures/Enemy/cannon_roughness.png";
 			//canon->get<MeshComponent>()->metallicFilepath = "Textures/Enemy/cannon_metallic.png";
 			canon->get<MeshComponent>()->emissiveFilepath = "Textures/Enemy/cannon_emit.png";
-			canon->get<MeshComponent>()->shaderName = "user";
 			canon->assign<EnemyShipCanon>(glm::vec3(0), glm::vec3(0), counter);
 			counter++;
 
@@ -183,7 +180,7 @@ void SpawnerScript::tickScript(float deltaTime)
 					entLeft->assign<BulletComponent>(canonPos, -cannonLookAt,false);
 					entLeft->assign<EnemyComponent>(0, -1, "Enemy Bullet");
 					entLeft->assign<CubeCollider>(2, 2, 2);
-					enemyCanon->ticksToFire = std::rand() % 300;
+					enemyCanon->ticksToFire = std::rand() % 500;
 					enemyCanon->ticks = 0;
 					float volume = 0.0f;
 					//calculate volume based on distance to player

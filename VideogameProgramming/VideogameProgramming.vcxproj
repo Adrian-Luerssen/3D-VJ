@@ -177,6 +177,7 @@
     <None Include="bullet.vert" />
     <None Include="default.frag" />
     <None Include="default.vert" />
+    <None Include="enemy.frag" />
     <None Include="inverted.frag" />
     <None Include="repeating.frag" />
     <None Include="skybox.frag" />

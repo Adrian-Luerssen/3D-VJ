@@ -128,9 +128,11 @@ void UserScript::tickScript(float deltaTime) {
 				entity->get<SoundComponent>()->playSound = true;
 				col = true;
 				cout << "hit by "<<enemy->name<< " only have "<<game->lives <<" left" << endl;
+				shake = true;
 			}
 			});
 
+		
 		//if (desiredEye.y < -5) {
 		//	cout << "fallen out of world" << endl;
 		//	desiredEye.y = 20;
@@ -204,7 +206,37 @@ void UserScript::tickScript(float deltaTime) {
 		firstClick = true;
 	}
 
+	if (shake) {
+
+		cameraShake(cam);
+		timeShaking -= deltaTime / 10.0f;
+		cout << "SHAKE" << endl;
+		if (timeShaking < 0) {
+			shake = false;
+			timeShaking = 100.0f;
+		}
+	}
 
 
+}
+
+#include <cmath>  // for sin function
+
+void UserScript::cameraShake(ComponentHandle<Camera> cam) {
+
+		float shakeFrequency = 0.50f;  // Adjust the frequency of the shake
+		float shakeAmplitude = 6.0f;   // Adjust the amplitude of the shake
+
+		// Calculate displacement based on sine and cosine components
+		float displacementX = shakeAmplitude * sin(shakeFrequency * timeShaking);
+		float displacementZ = shakeAmplitude * cos(shakeFrequency * timeShaking);
+		cout << "displacementX : " << displacementX << endl;
+		cout << "displacementZ : " << displacementZ << endl;
+
+		// Apply displacement to the camera's position
+		glm::vec3 right = glm::cross(cam->front, cam->up);
+		cout << "before : " << cam->eye.x << ", " << cam->eye.y << ", " << cam->eye.z << endl;
+		cam->eye += displacementX * right + displacementZ * cam->front;
+		cout << "after : " << cam->eye.x << ", " << cam->eye.y << ", " << cam->eye.z << endl;
 
 }

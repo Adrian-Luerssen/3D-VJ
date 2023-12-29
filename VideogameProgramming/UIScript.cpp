@@ -26,17 +26,25 @@ void UIScript::tickScript(float deltaTime) {
 			Entity* ent2 = world->create();
 			ent2->assign<Transform2D>(glm::vec2(400., 500.), 0.0f, 1.0f);
 			ent2->assign<Sprite>("Textures/Buttons/Start/Start1.png", glm::vec3(1., 1., 1.),true, glm::vec2(300, 80));
-			ent2->assign<ScoreComponent>(1);
 			ent2->assign<UIComponent>("StartButton", "Menu");
 			ent2->assign<ButtonComponent>("Start", "Textures/Buttons/Start/Start1.png", "Textures/Buttons/Start/Start2.png", "Textures/Buttons/Start/Start3.png", "Textures/Buttons/Start/Start4.png", "Textures/Buttons/Start/Start5.png");
 			
 			Entity* ent3 = world->create();
 			ent3->assign<Transform2D>(glm::vec2(400., 600.), 0.0f, 1.0f);
 			ent3->assign<Sprite>("Textures/Buttons/Story/Story1.png", glm::vec3(1., 1., 1.), true, glm::vec2(300, 80));
-			ent3->assign<ScoreComponent>(1);
 			ent3->assign<UIComponent>("StoryButton", "Menu");
 			ent3->assign<ButtonComponent>("Story", "Textures/Buttons/Story/Story1.png", "Textures/Buttons/Story/Story2.png", "Textures/Buttons/Story/Story3.png", "Textures/Buttons/Story/Story4.png", "Textures/Buttons/Story/Story5.png");
-		}
+			
+			Entity* ent4 = world->create();
+			ent4->assign<Transform2D>(glm::vec2(700., 750.), 0.0f, 0.5f);
+			ent4->assign<Sprite>("Textures/text/marca_liz.png", glm::vec3(1., 1., 1.), true);
+			ent4->assign<UIComponent>("waterMark_Liz", "Menu");
+
+			Entity* ent5 = world->create();
+			ent5->assign<Transform2D>(glm::vec2(120., 750.), 0.0f, 0.5f);
+			ent5->assign<Sprite>("Textures/text/marca_adri.png", glm::vec3(1., 1., 1.), true);
+			ent5->assign<UIComponent>("waterMark_Adri", "Menu");
+					}
 		else if (page == "Game") {
 			//destroy all UI elements
 			world->each<UIComponent>([&](Entity* ent, ComponentHandle<UIComponent> uiComp) {
@@ -51,9 +59,9 @@ void UIScript::tickScript(float deltaTime) {
 			world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> uiComp) {
 				ent->get<Transform3D>()->position = glm::vec3(0., 1.5, 0.);
 				ent->get<Transform3D>()->rotation = glm::vec3(0.0f);
-
 				});
 			game->pause = false;
+			game->freeCam = false;
 			game->score = 0;
 			game->lives = 5;
 			Entity* ent = world->create();
@@ -79,10 +87,14 @@ void UIScript::tickScript(float deltaTime) {
 			game->pause = true;
 			Entity* ent2 = world->create();
 			ent2->assign<Transform2D>(glm::vec2(400., 500.), 0.0f, 1.0f);
-			ent2->assign<Sprite>("Textures/Buttons/Restart/Restart1.png", glm::vec3(1., 1., 1.), true, glm::vec2(300, 80));
+			ent2->assign<Sprite>("Textures/Buttons//Resume/Resume1.png", glm::vec3(1., 1., 1.), true, glm::vec2(300, 80));
 			ent2->assign<UIComponent>("ResumeButton", "pause");
-			ent2->assign<ButtonComponent>("Resume", "Textures/Buttons/Restart/Restart1.png", "Textures/Buttons/Restart/Restart2.png", "Textures/Buttons/Restart/Restart3.png", "Textures/Buttons/Restart/Restart4.png", "Textures/Buttons/Restart/Restart5.png");
+			ent2->assign<ButtonComponent>("Resume", "Textures/Buttons/Resume/Resume1.png", "Textures/Buttons/Resume/Resume2.png", "Textures/Buttons/Resume/Resume3.png", "Textures/Buttons/Resume/Resume4.png", "Textures/Buttons/Resume/Resume5.png");
 
+			Entity* ent = world->create();
+			ent->assign<Transform2D>(glm::vec2(400., 400.), 0.0f, 1.0f);
+			ent->assign<Sprite>("Textures/text/pause.png", glm::vec3(1., 1., 1.));
+			ent->assign<UIComponent>("Pause", "pause");
 		}
 		else if (page == "GameOver") {
 			game->pause = true;
@@ -309,16 +321,25 @@ void UIScript::tickScript(float deltaTime) {
 				if (uiComp->id != "StoryPanel") return;
 				world->destroy(ent);
 				});
-		} else if (550 < t && t < 570) {
+			Entity* ent = world->create();
+			ent->assign<Transform2D>(glm::vec2(400., 400.), 0.0f, 1.0f);
+			ent->assign<Sprite>("Textures/Story/tutorial_6.png", glm::vec3(1., 1., 1.));
+			ent->assign<UIComponent>("StoryPanel", "Story");
+		} else if (600 < t && t < 620) {
+			world->each<UIComponent>([&](Entity* ent, ComponentHandle<UIComponent> uiComp) {
+				if (uiComp->id != "StoryPanel") return;
+				world->destroy(ent);
+				});
+		} else if (650 < t && t < 670) {
 			world->each<UIComponent>([&](Entity* ent, ComponentHandle<UIComponent> uiComp) {
 				if (uiComp->id != "StoryPanel") return;
 				world->destroy(ent);
 				});
 			Entity* ent = world->create();
 			ent->assign<Transform2D>(glm::vec2(400., 400.), 0.0f, 1.0f);
-			ent->assign<Sprite>("Textures/Story/tutorial_6.png", glm::vec3(1., 1., 1.));
+			ent->assign<Sprite>("Textures/Story/tutorial_7.png", glm::vec3(1., 1., 1.));
 			ent->assign<UIComponent>("StoryPanel", "Story");
-		} else if (650 < t && t < 670) {
+		} else if (750 < t && t < 770) {
 			page = "Menu";
 			changePage = true;
 		}
@@ -364,7 +385,10 @@ void UIScript::startButtonCheck(float deltaTime) {
 				else if (button->id == "Resume") {
 					page = "Game";
 					world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {gameController->pause = false; });
-					world->destroy(other_ent);
+					world->each<UIComponent>([&](Entity* ent, ComponentHandle<UIComponent> uiComp) {
+						if (uiComp->page != "pause") return;
+						world->destroy(ent);
+						});
 				}
 				else if (button->id == "Restart") {
 					page = "Game";
@@ -375,6 +399,16 @@ void UIScript::startButtonCheck(float deltaTime) {
 					page = "Menu";
 					world->each<GameController>([&](Entity* ent, ComponentHandle<GameController> gameController) {gameController->pause = true; });
 					changePage = true;
+					world->each<EnemyComponent>([&](Entity* ent, ComponentHandle<EnemyComponent> uiComp) {
+						world->destroy(ent);
+						});
+					world->each<EnemyShipCanon>([&](Entity* ent, ComponentHandle<EnemyShipCanon> uiComp) {
+						world->destroy(ent);
+						});
+					world->each<UserComponent>([&](Entity* ent, ComponentHandle<UserComponent> uiComp) {
+						ent->get<Transform3D>()->position = glm::vec3(0., 1.5, 0.);
+						ent->get<Transform3D>()->rotation = glm::vec3(0.0f);
+						});
 				}
 				else if (button->id == "Story") {
 					page = "Story";

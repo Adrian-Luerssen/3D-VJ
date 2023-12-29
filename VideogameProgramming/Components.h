@@ -89,12 +89,18 @@ struct MeshComponent
 
 struct Skybox
 {
-    Skybox(const char* textureFilepath, const char* meshFilepath) {
-        this->textureFilepath = textureFilepath;
+    Skybox(const char* background1, const char* foreground1, const char* foreground2, const char* foreground3, const char* meshFilepath) {
         this->meshFilepath = meshFilepath;
+        this->background1 = background1;
+        this->foreground1 = foreground1;
+        this->foreground2 = foreground2;
+        this->foreground3 = foreground3;
     }
-    const char* textureFilepath;
     const char* meshFilepath;
+    const char* background1;
+    const char* foreground1;
+    const char* foreground2;
+    const char* foreground3;
 };
 
 struct BoxCollider

@@ -30,7 +30,7 @@ public:
     void DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm::vec3 position, float scale, glm::vec3 rotation, Camera cam, Texture& normalsTexture, Texture& rough, Texture& metallic, Texture& emissive, Texture& mixedAO, float far, float time,
         string shaderName = "default");
 
-    void DrawSkybox(Mesh& mesh, Texture& texture, glm::mat4 projection, Camera cam,float ticks);
+    void DrawSkybox(Mesh& mesh, Texture& texture1, Texture& texture2, Texture& texture3, Texture& texture4, glm::mat4 projection, Camera cam,float ticks);
 
     void Delete();
 private:
@@ -41,6 +41,7 @@ private:
     std::shared_ptr<Shader> shaderSkybox;
     std::shared_ptr<Shader> shaderBullet;
     std::shared_ptr<Shader> shaderUser;
+    std::shared_ptr<Shader> shaderEnemy;
     std::shared_ptr<VAO> vao_quad;
     std::shared_ptr<VBO> vbo;
     std::shared_ptr<EBO> ebo;

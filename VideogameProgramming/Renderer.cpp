@@ -32,6 +32,7 @@ void Renderer::Init()
     shaderSkybox = std::make_shared<Shader>("skybox.vert", "skybox.frag");
     shaderBullet = std::make_shared<Shader>("bullet.vert", "bullet.frag");
     shaderUser = std::make_shared<Shader>("default.vert", "user.frag");
+    shaderEnemy = std::make_shared<Shader>("default.vert", "enemy.frag");
 
     /*GLint tex0handle = glGetUniformLocation(shaderDefault->ID, "tex0");
     GLint tex1handle = glGetUniformLocation(shaderDefault->ID, "tex1");
@@ -164,6 +165,9 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
     else if (shaderName == "user") {
         shader = shaderUser;
     }
+    else if (shaderName == "enemy") {
+        shader = shaderEnemy;
+    }
 
     // prepare transformations
     shader->Activate();
@@ -214,6 +218,12 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
         mixedAO.Bind();
         shader->SetTextureSampler("texMixedAO", 5);
     }
+    else if (shaderName == "enemy") {
+        glActiveTexture(GL_TEXTURE0 + 2);
+        emissive.Bind();
+        shader->SetTextureSampler("texEmissive", 2);
+
+    }
 
     mesh.VAO.Bind();
     glDrawElements(GL_TRIANGLES, mesh.indices.size(), GL_UNSIGNED_INT, 0);
@@ -221,7 +231,7 @@ void Renderer::DrawMesh(Mesh& mesh, Texture& texture, glm::mat4 projection, glm:
 }
 
 
-void Renderer::DrawSkybox(Mesh& mesh, Texture& texture, glm::mat4 projection, Camera cam, float ticks)
+void Renderer::DrawSkybox(Mesh& mesh, Texture& texture1, Texture& texture2, Texture& texture3, Texture& texture4, glm::mat4 projection, Camera cam, float ticks)
 {
 
     std::shared_ptr<Shader> shader = shaderSkybox;
@@ -245,8 +255,22 @@ void Renderer::DrawSkybox(Mesh& mesh, Texture& texture, glm::mat4 projection, Ca
     shader->SetFloat("time", ticks);
 
     glActiveTexture(GL_TEXTURE0);
-    texture.Bind();
-    
+    texture1.Bind();
+    shader->SetTextureSampler("tex0", 0);
+
+    glActiveTexture(GL_TEXTURE0 + 1);
+    texture2.Bind();
+    shader->SetTextureSampler("tex1", 1);
+
+    glActiveTexture(GL_TEXTURE0 + 2);
+    texture3.Bind();
+    shader->SetTextureSampler("tex2", 2);
+
+    glActiveTexture(GL_TEXTURE0 + 3);
+    texture4.Bind();
+    shader->SetTextureSampler("tex3", 3);
+
+
     //cout << mesh.indices.size() << endl;
 
     mesh.VAO.Bind();

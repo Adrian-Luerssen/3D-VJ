@@ -115,9 +115,9 @@ Entity* CreateCamera(glm::vec3 position) {
 	return ent;
 }
 
-Entity* CreateSkybox(const char* meshFilepath, const char* texFilepath) {
+Entity* CreateSkybox(const char* background1, const char* foreground1, const char* foreground2, const char* foreground3, const char* meshFilepath) {
 	Entity* ent = world->create();
-	ent->assign<Skybox>(texFilepath, meshFilepath);
+	ent->assign<Skybox>(background1,foreground1,foreground2,foreground3, meshFilepath);
 
 	return ent;
 }
@@ -163,10 +163,13 @@ void SetupWorld() {
 	EnemyShipScript* enemyShipScript = new EnemyShipScript(window, world, enemyShipManager);
 	enemyShipManager->assign<ScriptComponent>(scriptManager->AddScript(enemyShipScript));
 
-	Entity* skybox = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/background.png");
+	Entity* skybox = CreateSkybox("Textures/Space/space_back2.png", "Textures/Space/space_front1.png", "Textures/Space/space_front2.png", "Textures/Space/space_front3.png", "Meshes/flipped_sphere.obj");
 	//Entity* skybox2 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/nebula_1.png");
 	//Entity* skybox3 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/space/nebula_2.png");
-	Entity* skybox4 = CreateSkybox("Meshes/flipped_sphere.obj", "Textures/Enemy/cannon_normal.png");
+	//Entity* skybox4 = CreateSkybox("Meshes/flipped_sphere.obj");
+	//Entity* skybox5 = CreateSkybox("Meshes/flipped_sphere.obj");
+	//Entity* skybox6 = CreateSkybox("Meshes/flipped_sphere.obj");
+	//Entity* skybox7 = CreateSkybox("Meshes/flipped_sphere.obj");
 
 	//Entity* floor = CreateEntity3DWithMesh(glm::vec3(32, 0, 18), 30, "Meshes/plane.obj", "Textures/background_brown.png", "Textures/sand/Sand_norm.png");
 
@@ -228,76 +231,76 @@ void SetupWorld() {
 			ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/asteroide10.obj", "default", "Textures/asteroids/normal.png");
 			break;
 		case 11:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard1.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard1.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 12:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard2.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard2.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 13:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard3.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard3.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 14:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard4.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard4.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 15:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard5.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard5.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 16:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard6.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard6.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 17:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard7.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard7.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 18:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard8.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard8.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 19:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard9.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard9.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 20:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard10.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard10.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 21:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard11.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard11.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 22:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard12.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard12.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 23:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard13.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard13.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 24:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard14.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard14.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 25:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard15.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard15.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 26:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard16.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard16.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 27:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard17.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard17.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 28:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard18.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard18.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 29:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard19.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard19.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 30:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard20.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard20.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 31:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard21.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard21.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 32:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard22.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard22.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 33:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard23.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard23.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 34:
-			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard24.obj", "user", "Textures/Enemy/spaceship_normal.png");
+			ent->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/shard24.obj", "default", "Textures/Enemy/spaceship_normal.png");
 			break;
 		case 35:
 			ent->assign<MeshComponent>("Textures/asteroids/color.png", "Meshes/asteroids/shards/shard1.obj", "default", "Textures/asteroids/normal.png");
@@ -384,16 +387,14 @@ void SetupWorld() {
 
 	Entity* ent1 = world->create();
 	ent1->assign<Transform3D>(glm::vec3(100000, 1, 0.), 5);
-	ent1->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/enemy.obj", "user", "Textures/Enemy/spaceship_normal.png");
-	ent1->get<MeshComponent>()->roughnessFilepath = "Textures/Enemy/spaceship_roughness2.png";
-	//ent1->get<MeshComponent>()->metallicFilepath = "Textures/Enemy/spaceship_metallic.png";
+	ent1->assign<MeshComponent>("Textures/Enemy/spaceship_baseColor.png", "Meshes/Enemy/enemy.obj", "enemy", "Textures/Enemy/spaceship_normal.png");
 	ent1->get<MeshComponent>()->emissiveFilepath = "Textures/Enemy/spaceship_emit.png";
 	ent1->assign<TemporaryComponent>();
 
 
 	Entity* ent2= world->create();
 	ent2->assign<Transform3D>(glm::vec3(1000000, 1, 0.), 5);
-	ent2->assign<MeshComponent>("Textures/Enemy/cannon_diffuse2.png", "Meshes/Enemy/canon.obj", "user", "Textures/Enemy/cannon1_normal.png");
+	ent2->assign<MeshComponent>("Textures/Enemy/cannon_diffuse2.png", "Meshes/Enemy/canon.obj", "enemy", "Textures/Enemy/cannon1_normal.png");
 	ent2->get<MeshComponent>()->roughnessFilepath = "Textures/Enemy/cannon_roughness.png";
 	//canon->get<MeshComponent>()->metallicFilepath = "Textures/Enemy/cannon_metallic.png";
 	ent2->get<MeshComponent>()->emissiveFilepath = "Textures/Enemy/cannon_emit.png";

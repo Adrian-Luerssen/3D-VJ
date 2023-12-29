@@ -19,8 +19,10 @@ void RenderSystem::tick(World* world, float deltaTime)
     glEnable(GL_DEPTH_TEST);
     
     world->each<Skybox>([&](Entity* ent, ComponentHandle<Skybox> meshComp) {
-
-        Texture texture = textureManager.GetTexture(meshComp->textureFilepath);
+        Texture texture1 = textureManager.GetTexture(meshComp->background1);
+        Texture texture2 = textureManager.GetTexture(meshComp->foreground1);
+        Texture texture3 = textureManager.GetTexture(meshComp->foreground2);
+        Texture texture4 = textureManager.GetTexture(meshComp->foreground3);
 
         Mesh mesh = meshManager.GetMesh(meshComp->meshFilepath);
 
@@ -28,7 +30,7 @@ void RenderSystem::tick(World* world, float deltaTime)
 
         ComponentHandle<Camera> cam = camera->get<Camera>();
 
-        rend.DrawSkybox(mesh, texture, proj, cam.get(),cam->ticks+=deltaTime/10.0f);
+        rend.DrawSkybox(mesh, texture1,texture2,texture3,texture4, proj, cam.get(),cam->ticks+=deltaTime/10.0f);
 
     });
     
@@ -47,7 +49,7 @@ void RenderSystem::tick(World* world, float deltaTime)
 
         ComponentHandle<Camera> cam = camera->get<Camera>();
         ComponentHandle<UserComponent> user = ent->get<UserComponent>();
-        if (user == NULL && meshComp->shaderName != "user") {
+        if (user == NULL && (meshComp->shaderName != "user" && meshComp->shaderName != "enemy")) {
             rend.DrawMesh(mesh, texture, proj, transform->position, transform->scale, transform->rotation, cam.get(), normalsTexture, far, meshComp->shaderName);
         }
         else {
